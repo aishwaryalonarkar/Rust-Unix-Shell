@@ -1,3 +1,12 @@
+mod util;
+
 fn main() {
-    println!("Hello, world!");
+    let mut history = util::initialize_vector();
+
+    loop {
+        print!("rustshell@rustshell:$ ");
+    }
+    
 }
+
+
