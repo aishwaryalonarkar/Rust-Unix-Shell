@@ -9,11 +9,19 @@ fn main() {
 
     loop {
         print!("rustshell@rustshell:~$ ");
+        // Flushes the output to stdout as prints without new line are buffered and we have 
+        // to explicitly flush the buffer.
         std::io::stdout().flush().unwrap();
+
+        // Reads the input from the command line
         std::io::stdin().read_line(&mut command).unwrap();
 
+        // Reading input from command line adds a new line character at the end.
+        // Copying everything back to command except the new line character to match 
+        // the strings later with the commands.
         command = String::from(&command[..command.len() - 1]);
 
+        // Every command whether valid or invalid is added to the history list
         history = util::add_command_to_history(history, command.clone());
         
         if command == command_history {
@@ -25,6 +33,7 @@ fn main() {
             println!("Invalid command");
         }
 
+        // Clear the command variable in order to start fresh for the next iteration
         command.clear();
     }
 }
