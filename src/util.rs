@@ -15,7 +15,7 @@ pub fn add_command_to_history(mut history:Vec<String>, command:String) -> Vec<St
 // Print the commands present in the history vector
 pub fn list_history(history:Vec<String>) -> Vec<String> {
     for i in 0..history.len() {
-        println!("{}", history[i]);
+        println!("\t{0} {1}", i + 1, history[i]);
     }
 
     history
