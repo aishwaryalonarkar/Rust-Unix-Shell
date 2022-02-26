@@ -27,11 +27,15 @@ pub fn list_history(history:Vec<String>) -> Vec<String> {
     history
 }
 
+// Write the cmd_history to a file
 pub fn write_results_in_file(key: String, value: Vec<String>) {
     let file_name = "log.txt";
     let path = Path::new(file_name);
     let display = path.display();
 
+    // Check the existence of the file in the current directory. If exists, read the file, extract the 
+    // JSON from the file and create a file with write only permission and write the updated data
+    // into the file. If file does not exists, create the file and write the data into it.
     let exists = Path::new(file_name).exists();
 
      // https://doc.rust-lang.org/rust-by-example/std_misc/file/open.html
@@ -84,25 +88,33 @@ pub fn retrieve_history(mut history:Vec<String>) -> Vec<String> {
     let path = Path::new(file_name);
     let display = path.display();
 
+    // Check for file existence
     let exists = Path::new(file_name).exists();
 
     if exists {
+        // Open the file with read permission
         let mut file = match File::open(&path) {
             Err(why) => panic!("couldn't open {}: {}", display, why),
             Ok(file) => file,
         };
 
+        // Read the contents of the file and convert it into the String format
         let mut data = String::new();
         match file.read_to_string(&mut data) {
             Err(why) => panic!("couldn't read {}: {}", display, why),
             Ok(_) => print!("")
         }
 
+        // Convert the extracted data from String to JSON type and then extract the value
+        // of key "cmd_history"
         let data = json::parse(&data).unwrap();
         let cmd_history = &data["cmd_history"];
 
+        // Add every entry into the JSON array into the history vector using stringify.
         for i in 0..cmd_history.len() {
             history = add_command_to_history(history, json::stringify(cmd_history[i].clone()));
+             // Rewrite every entries into the history vector such that double quotes ("") are not
+            // copied into the history vector. e.g. "ls" is copied as ls into the vector
             history[i] = String::from(&history[i][1..history[i].len() - 1]);
         }
     }
