@@ -7,6 +7,8 @@ fn main() {
     let command_quit: String = String::from("quit");
     let mut command:String = String::new();
 
+    history = util::retrieve_history(history);
+
     loop {
         print!("rustshell@rustshell:~$ ");
         // Flushes the output to stdout as prints without new line are buffered and we have 
@@ -28,6 +30,7 @@ fn main() {
             history = util::list_history(history);
         } else if command == command_quit {
             println!("Quitting");
+            util::write_results_in_file(command_history, history.clone());
             break;
         } else {
             println!("Invalid command");
