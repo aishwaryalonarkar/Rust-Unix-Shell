@@ -121,4 +121,3 @@ pub fn retrieve_history(mut history:Vec<String>) -> Vec<String> {
 
     history
 }
- 
