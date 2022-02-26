@@ -7,6 +7,7 @@ fn main() {
     let command_quit: String = String::from("quit");
     let mut command:String = String::new();
 
+    // Retrieve the history commands if any before starting the shell
     history = util::retrieve_history(history);
 
     loop {
