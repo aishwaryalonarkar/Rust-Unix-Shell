@@ -24,6 +24,12 @@ fn main() {
         // the strings later with the commands.
         command = String::from(&command[..command.len() - 1]);
 
+        // If no input is entered and only return is pressed, it does not track those inputs
+        if command.len() == 0 {
+            command.clear();
+            continue;
+        }
+
         // Every command whether valid or invalid is added to the history list
         history = util::add_command_to_history(history, command.clone());
         
