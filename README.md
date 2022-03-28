@@ -13,6 +13,9 @@ e. sortbytype (Sort by type): This command is used to combine multiple files of 
 
 f. quit: Use quit to get out of rust command line.
 
+# Crates
+1. json - 0.12.4
+
 # cmd_history
 1. Track down all the commands been entered onto the command line.
 2. Displays the history of commands entered.
