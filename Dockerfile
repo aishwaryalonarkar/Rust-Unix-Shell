@@ -11,7 +11,9 @@ RUN curl https://getmic.ro | sh -s -- -y && mv micro /usr/bin/
 COPY src ./src
 COPY Cargo.toml .
 COPY Cargo.lock .
-
+COPY init-fs.sh .
+RUN chmod +x init-fs.sh
+RUN ./init-fs.sh
 RUN cargo build
 
 CMD ["/bin/bash"]
