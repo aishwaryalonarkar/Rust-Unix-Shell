@@ -37,7 +37,7 @@ b. -a: List all the files including the hidden files, symbolic links.
 c. -tree: Show the hierarchy of all the files and directory inside the current directory.
 d. -color: Display the files in different colors as per their file type
 
-cmd uasge: list [-l] [-a] [-tree] [-color] <directory>
+cmd uasge: listDir [-l] [-a] [-tree] [-color] <directory>
 
 # rmallexn
 Release 2

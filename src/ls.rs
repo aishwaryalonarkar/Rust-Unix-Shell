@@ -67,7 +67,6 @@ pub fn ls_main(path: String) {
         return;
     }    
 
-// -------------------------------------------------------------------------------------------------------------
     let paths = fs::read_dir(collected_path).unwrap();
 
     // Printing header for listDir command
