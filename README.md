@@ -42,6 +42,16 @@ listDir [-l] [-a] [-tree] [-color] \<directory\>
 
 # rmallexn
 Release 2
+Deletes the file and folder in a directory except the one passed as argument to the command
+
+Sample syntax: 
+1. rmallexn test/abc/def 
+The above command will delete all the files and directories in test/abc/ and keep only test/abc/def
+    
+2. rmallexn test/xyz/file1.txt
+The above command will delete all the files and directories in test/xyz/ and keep only test/xyz/file1.txt
+
+The file or the directory to keep should not have whitespaces in the name.
 
 # rev_search
 Release 3

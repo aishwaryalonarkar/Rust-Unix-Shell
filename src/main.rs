@@ -1,4 +1,5 @@
 mod util;
+mod rmallexn;
 use std::io::Write;
 
 fn main() {
@@ -35,7 +36,12 @@ fn main() {
         
         if command == command_history {
             history = util::list_history(history);
-        } else if command == command_quit {
+        } 
+        //check if command starts with rmallexn
+        else if command.starts_with("rmallexn"){
+            rmallexn::rmxn(command.clone());
+        }
+        else if command == command_quit {
             println!("Quitting");
             util::write_results_in_file(command_history, history.clone());
             break;
