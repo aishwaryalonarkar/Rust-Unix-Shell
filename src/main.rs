@@ -67,11 +67,11 @@ fn main() {
                 // trim all whitespaces 
                 command_t = command_t.replace(" ", "");
                 match command_t.as_str() {
-                    "ls-a" => ls_tree::list_all(path.to_string()),
-                    "ls-tree" => ls_tree::tree_display(path.to_string()),
-                    "ls-l-color" => println!("||||| -l-color"),
-                    "ls-color-l" => println!("||||| -l-color"),
-                    "ls-l" => println!("||||| -l"),
+                    "listDir-a" => ls_tree::list_all(path.to_string()),
+                    "listDir-tree" => ls_tree::tree_display(path.to_string()),
+                    "listDir-l-color" => println!("||||| -l-color"),
+                    "listDir-color-l" => println!("||||| -l-color"),
+                    "listDir-l" => println!("||||| -l"),
                     _=>{
                         println!("Invalid option");
                         println!("listDir [-l] [-a] [-tree] [-color] <directory>");
