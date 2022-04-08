@@ -10,8 +10,7 @@ fn main() {
     let mut history = util::initialize_vector();
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
-    let command_ls: String = String::from("ls"); //listDir
-    // let command_ls: String = String::from("ls -a"); //listDir
+    let command_ls: String = String::from("listDir"); //listDir
     let mut command:String = String::new();
 
     // Retrieve the history commands if any before starting the shell
