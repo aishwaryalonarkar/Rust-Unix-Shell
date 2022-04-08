@@ -27,7 +27,7 @@ f. quit: Use quit to get out of rust command line.
 
 cmd usage: cmd_history
 
-# list
+# listDir
 1. The list command will accept a variety of parameters.
 
 2. The parameters involves:
