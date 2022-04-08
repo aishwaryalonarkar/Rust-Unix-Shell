@@ -1,21 +1,21 @@
 mod util;
+mod ls_tree;
 mod ls;
 mod ls_color;
 use std::io::Write;
+use std::path::Path;
+
+// use std::fs;
 
 fn main() {
     let mut history = util::initialize_vector();
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
-    let command_ls_l: String = String::from("listdir -l");
-    let command_ls_color: String = String::from("listdir -l -color");
+    let command_ls: String = String::from("ls"); //listDir
     let mut command:String = String::new();
 
     // Retrieve the history commands if any before starting the shell
     history = util::retrieve_history(history);
-
-    // Retrieve path
-    
 
     loop {
         print!("rustshell@rustshell:~$ ");
@@ -39,14 +39,49 @@ fn main() {
 
         // Every command whether valid or invalid is added to the history list
         history = util::add_command_to_history(history, command.clone());
+        
 
-        if command == command_ls_l {
-            ls::ls_main();
-        } else if command == command_ls_color {
-            ls_color::ls_main();
-        } else if command == command_history {
+        // splitting for listDir Options.
+        command = command.trim().to_string();
+        let g = command.split(" ");
+        let vec: Vec<&str> = g.collect();
+        let mut path = vec[vec.len()-1];
+
+
+        if command == command_history {
             history = util::list_history(history);
-        } else if command == command_quit {
+        } 
+        else if vec[0] == command_ls {
+            
+            // Set default path ./ if no path input.
+            if path == "-a" || path == "-tree" || path == "-l" || path =="-color" || path == command_ls {
+                path = "";
+            }
+            // Check if input path exist
+            if !Path::new(path).exists() && path != "" {
+                println!("Path does not exist -> {}", path);
+                
+            }
+            else {
+                // Remove path from command 
+                let mut command_t = command.replace(path, "");
+                // trim all whitespaces 
+                command_t = command_t.replace(" ", "");
+                match command_t.as_str() {
+                    "ls-a" => ls_tree::list_all(path.to_string()),
+                    "ls-tree" => ls_tree::tree_display(path.to_string()),
+                    "ls-l-color" => ls_color::ls_color_main(path.to_string()),
+                    "ls-color-l" => ls_color::ls_color_main(path.to_string()),
+                    "ls-l" => ls::ls_main(path.to_string()),
+                    _=>{
+                        println!("Invalid option");
+                        println!("listDir [-l] [-a] [-tree] [-color] <directory>");
+                    }
+                }
+            }
+
+        }
+        else if command == command_quit {
             println!("Quitting");
             util::write_results_in_file(command_history, history.clone());
             break;

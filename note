@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 sudo apt-get install dos2unix
 dos2unix init-fs.sh
 
 docker build -t rust-project:1.0 .
 docker run -it --privileged rust-project:1.0
+=======
+source $HOME/.cargo/env #Import the environment config for rust
+
+sudo apt-get install dos2unix
+dos2unix init-fs.sh
+
+docker build -t rust-project:1.0 .
+docker run -it --privileged rust-project:1.0
+cargo run
+
+>>>>>>> a0b1afb026aa130b92c729f1870eb04f1461e948
