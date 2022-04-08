@@ -1,14 +1,21 @@
 mod util;
+mod ls;
+mod ls_color;
 use std::io::Write;
 
 fn main() {
     let mut history = util::initialize_vector();
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
+    let command_ls_l: String = String::from("listdir -l");
+    let command_ls_color: String = String::from("listdir -l -color");
     let mut command:String = String::new();
 
     // Retrieve the history commands if any before starting the shell
     history = util::retrieve_history(history);
+
+    // Retrieve path
+    
 
     loop {
         print!("rustshell@rustshell:~$ ");
@@ -32,8 +39,12 @@ fn main() {
 
         // Every command whether valid or invalid is added to the history list
         history = util::add_command_to_history(history, command.clone());
-        
-        if command == command_history {
+
+        if command == command_ls_l {
+            ls::ls_main();
+        } else if command == command_ls_color {
+            ls_color::ls_main();
+        } else if command == command_history {
             history = util::list_history(history);
         } else if command == command_quit {
             println!("Quitting");
