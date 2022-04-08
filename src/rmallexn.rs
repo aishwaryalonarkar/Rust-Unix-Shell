@@ -14,8 +14,6 @@ pub fn rmxn(command: String) {
 
         //checking if command is an exact match else suggest using rmallexn command
         if chunks[0] == String::from("rmallexn"){
-
-            //println!("{:?}", chunks);
             
             //check if no of argument is equal to two
             if chunks.len() < 2{
@@ -25,10 +23,6 @@ pub fn rmxn(command: String) {
                 println!("rmallexn takes only one parameter; multiple parameters passed");
             }
             else{
-                
-                //let current_dir = env::current_dir();
-                //let current_dir = current_dir.expect("Executable must be in some directory");
-                //println!("current dir {:?}",current_dir);
                 
                 //getting the file/directory to keep
 
@@ -40,17 +34,14 @@ pub fn rmxn(command: String) {
                     //getting absolute path of the file/folder
                     let srcdir = PathBuf::from(&dir);
                     let absolute_path = fs::canonicalize(&srcdir).expect("Cannot resolve directory");
-                    //println!("absolute path is {:?}", absolute_path);
-
+                    
                     //get the parent directory of the file/folder to keep
                     let parent_absolute_path = absolute_path.parent().unwrap();
-                    //println!("parent absolute path is {:?}", parent_absolute_path);
                     
                     //reading the parent path and looping through all the items in it
                     let paths = fs::read_dir(parent_absolute_path).unwrap();
                     for path in paths {
                         
-                        //println!("Name: {}", path.unwrap().path().display());
                         let path_string = path.unwrap().path();
 
                         //check if the path of the string in loop matches with the file/directory to keep else delete
@@ -59,16 +50,12 @@ pub fn rmxn(command: String) {
                             //check if the path is a file
                             if Path::new(&path_string).is_file(){
                                 
-                                //println!("path is file");
-                                //println!("Name: {:?}", path_string);
                                 //delete the file
                                 fs::remove_file(path_string).expect("Failed to remove a file");
                                 
                             }
                             else{
                             
-                                //println!("path is dir");
-                                //println!("Name: {:?}", path_string);
                                 
                                 //delete it directory content
                                 let delete_dir = fs::read_dir(path_string.clone());
