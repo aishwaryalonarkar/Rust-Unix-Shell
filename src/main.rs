@@ -36,7 +36,9 @@ fn main() {
         
         if command == command_history {
             history = util::list_history(history);
-        } else if command.starts_with("rmallexn"){
+        } 
+        //check if command starts with rmallexn
+        else if command.starts_with("rmallexn"){
             rmallexn::rmxn(command.clone());
         }
         else if command == command_quit {
