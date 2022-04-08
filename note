@@ -7,9 +7,3 @@ docker build -t rust-project:1.0 .
 docker run -it --privileged rust-project:1.0
 cargo run
 
-
-Evaluation points:
-
-Find Weaknesses
-Keep login pages encrypted
-Back up your website files
