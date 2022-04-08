@@ -5,7 +5,7 @@ a. cmd_history: Displays the history of commands entered in the command line.
 
 b. rmallexn(remove all except n): Remove all the files and directories in the directory path mentioned in the argument except the file mentioned.
 
-c. ls [-l][-a][-tree][-color] <directory>: List the contents of the directory with optional arguments.
+c. listDir [-l][-a][-tree][-color] <directory>: List the contents of the directory with optional arguments.
 
 d. rev_search(Reverse search and execute): Search in the history to check if the substring entered matches any entry and accordingly execute it
 
