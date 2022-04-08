@@ -18,6 +18,56 @@ pub fn ls_main(path: String) {
         collected_path = String::from("./");
     }
 
+    // Handling only last file condition...
+
+    let sample_path = PathBuf::from(&collected_path);
+    let sample_meta = fs::metadata(&sample_path).unwrap();
+    let sym_sample_path = fs::canonicalize(&sample_path).unwrap();
+    let sample_metadata_sym = fs::symlink_metadata(&sample_path).unwrap();
+    let sample_symbolic = sample_metadata_sym.file_type();
+
+    if sample_meta.is_file()
+    {
+        if sample_symbolic.is_symlink()
+        {
+            let sym_sample_file_mode = sample_metadata_sym.permissions().mode();
+            let sym_sample_modified: DateTime<Local> = DateTime::from(sample_metadata_sym.modified().unwrap());
+            let sym_sample_size = sample_metadata_sym.len();
+            let sym_sample_f_name = sample_path.file_name().unwrap();
+            let sym_sample_f_name_str = sym_sample_f_name.to_str().unwrap();
+            let sym_sample_file_name = String::from(sym_sample_f_name_str);
+            let sym_sample_hard_link = sample_metadata_sym.nlink();
+
+
+            let sym_s_user_permission = permission_checker(sym_sample_file_mode,  S_IRUSR, S_IWUSR, S_IXUSR);
+            let sym_s_grpup_permission = permission_checker(sym_sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
+            let sym_s_other_permission = permission_checker(sym_sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
+
+            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.into_os_string().into_string().unwrap());
+            return;
+        }
+
+
+        let sample_file_mode = sample_meta.permissions().mode();
+        let sample_modified: DateTime<Local> = DateTime::from(sample_meta.modified().unwrap());
+        let sample_size = sample_meta.len();
+
+        // let sample_name = &collected_path;
+        let sample_f_name = sample_path.file_name().unwrap();
+        let sample_f_name_str = sample_f_name.to_str().unwrap();
+        let sample_file_name = String::from(sample_f_name_str);
+        let sample_hard_link = sample_meta.nlink();
+
+
+        let s_user_permission = permission_checker(sample_file_mode,  S_IRUSR, S_IWUSR, S_IXUSR);
+        let s_grpup_permission = permission_checker(sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
+        let s_other_permission = permission_checker(sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
+
+        println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name);
+        return;
+    }    
+
+// -------------------------------------------------------------------------------------------------------------
     let paths = fs::read_dir(collected_path).unwrap();
 
     // Printing header for listDir command

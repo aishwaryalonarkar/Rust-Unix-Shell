@@ -11,7 +11,7 @@ fn main() {
     let mut history = util::initialize_vector();
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
-    let command_ls: String = String::from("ls"); //listDir
+    let command_ls: String = String::from("listDir"); //listDir
     let mut command:String = String::new();
 
     // Retrieve the history commands if any before starting the shell
@@ -68,11 +68,11 @@ fn main() {
                 // trim all whitespaces 
                 command_t = command_t.replace(" ", "");
                 match command_t.as_str() {
-                    "ls-a" => ls_tree::list_all(path.to_string()),
-                    "ls-tree" => ls_tree::tree_display(path.to_string()),
-                    "ls-l-color" => ls_color::ls_color_main(path.to_string()),
-                    "ls-color-l" => ls_color::ls_color_main(path.to_string()),
-                    "ls-l" => ls::ls_main(path.to_string()),
+                    "listDir-a" => ls_tree::list_all(path.to_string()),
+                    "listDir-tree" => ls_tree::tree_display(path.to_string()),
+                    "listDir-l-color" => ls_color::ls_color_main(path.to_string()),
+                    "listDir-color-l" => ls_color::ls_color_main(path.to_string()),
+                    "listDir-l" => ls::ls_main(path.to_string()),
                     _=>{
                         println!("Invalid option");
                         println!("listDir [-l] [-a] [-tree] [-color] <directory>");

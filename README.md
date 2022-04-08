@@ -15,6 +15,11 @@ f. quit: Use quit to get out of rust command line.
 
 # Crates
 1. json - 0.12.4
+2. colored = 2.0.0
+3. chrono = 0.4
+4. permissions = 0.3.0
+5. is_executable = 1.0.1
+6. libc = 0.2.122
 
 # cmd_history
 1. Track down all the commands been entered onto the command line.
@@ -22,8 +27,17 @@ f. quit: Use quit to get out of rust command line.
 
 cmd usage: cmd_history
 
-# ls
-Release 2
+# list
+1. The list command will accept a variety of parameters.
+
+2. The parameters involves:
+
+a. -l : List the files and directories in the path mentioned as the argument.
+b. -a: List all the files including the hidden files, symbolic links.
+c. -tree: Show the hierarchy of all the files and directory inside the current directory.
+d. -color: Display the files in different colors as per their file type
+
+cmd uasge: list [-l] [-a] [-tree] [-color] <directory>
 
 # rmallexn
 Release 2
