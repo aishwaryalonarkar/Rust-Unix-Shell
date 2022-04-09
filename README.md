@@ -29,7 +29,6 @@ cmd usage: cmd_history
 
 # listDir
 1. The list command will accept a variety of parameters.
-
 2. The parameters involves:
 
     a. -l : List the files and directories in the path mentioned as the argument.
@@ -42,15 +41,10 @@ cmd usage: cmd_history
 
 cmd uasge: listDir [-l] [-a] [-tree] [-color] <directory>
 1. listDir -l <directory>
-
 2. listDir -l -color <directory>
-
 3. listDir -tree <directory>
-
 4. listDir -tree 
-
 5. listDir -a <directory>
-
 6. listDir -a 
 
 # rmallexn
