@@ -1,8 +1,9 @@
 mod util;
 mod ls_tree;
+mod ls;
+mod ls_color;
 mod rmallexn;
 use std::io::Write;
-
 use std::path::Path;
 
 // use std::fs;
@@ -57,6 +58,7 @@ fn main() {
             if path == "-a" || path == "-tree" || path == "-l" || path =="-color" || path == command_ls {
                 path = "";
             }
+
             // Remove path from command 
             let mut command_t = command.replace(path, "");
             // trim all whitespaces 
@@ -87,7 +89,7 @@ fn main() {
                             println!("Path does not exist -> {}", path);
                         }
                         else {
-                            // println!("||||| -l-color");
+                           ls_color::ls_color_main(path.to_string())
                         }
                     },
                 "listDir-color-l" =>{
@@ -97,7 +99,7 @@ fn main() {
                                 println!("Path does not exist -> {}", path);
                             }
                             else {
-                            // println!("||||| -l-color");
+                                ls_color::ls_color_main(path.to_string())    
                             }
                     },
                 "listDir-l" => {
@@ -107,7 +109,7 @@ fn main() {
                             println!("Path does not exist -> {}", path);
                         }
                         else {
-                            // Call to -l
+                            ls::ls_main(path.to_string())    
                         }
                     },
                 _=>{
