@@ -32,10 +32,13 @@ cmd usage: cmd_history
 
 2. The parameters involves:
 
-a. -l : List the files and directories in the path mentioned as the argument.
-b. -a: List all the files including the hidden files, symbolic links.
-c. -tree: Show the hierarchy of all the files and directory inside the current directory.
-d. -color: Display the files in different colors as per their file type
+    a. -l : List the files and directories in the path mentioned as the argument.
+    
+    b. -a: List all the files including the hidden files, symbolic links.
+    
+    c. -tree: Show the hierarchy of all the files and directory inside the current directory.
+    
+    d. -color: Display the files in different colors as per their file type
 
 cmd uasge: listDir [-l] [-a] [-tree] [-color] <directory>
 
