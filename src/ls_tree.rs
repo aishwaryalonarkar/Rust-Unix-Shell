@@ -2,7 +2,6 @@
 use std::fs;
 use std::path::Path;
 use std::error::Error;
-use std::process;
 
 
 pub fn tree_display(path : String) {
@@ -76,7 +75,7 @@ pub fn list_all(path : String) {
 
 	if let Err(ref e) = run_all(Path::new(&dir_path),&mut disp_vec) {
 		println!("{}", e);
-		process::exit(1);
+        return;
 	}
     let mut max = 0;
     let mut screen_max = 5;
