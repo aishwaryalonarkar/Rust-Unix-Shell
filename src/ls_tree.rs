@@ -2,7 +2,6 @@
 use std::fs;
 use std::path::Path;
 use std::error::Error;
-use std::process;
 
 
 pub fn tree_display(path : String) {
@@ -12,10 +11,9 @@ pub fn tree_display(path : String) {
     }
     println!("{}",dir_path);
 
-    // let mut disp_vec : Vec<Vec<String>> = Vec::new();
 	if let Err(ref e) = run(Path::new(&dir_path),0,Vec::new(),&dir_path) {
 		println!("{:?}", e);
-		process::exit(1);
+        return;
 	}
     println!("");
 }
@@ -24,6 +22,8 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) 
 
 	if dir.is_dir() {
         level = level + 1;
+
+        // Source Url https://endler.dev/2018/ls/
 		for entry in fs::read_dir(dir)? {
 				let entry = entry?;
 				let file_name = entry.file_name().into_string().or_else(|f| Err(format!("Invalid entry: {:?}", f)))?;
@@ -54,7 +54,7 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) 
 
                     if let Err(ref e) = run(Path::new(&s4),level,vec.clone(),dir_path) {
                             println!("{:?}", e);
-                            process::exit(1);
+                            break;
                     }
                     vec.pop();
                 }
@@ -75,7 +75,7 @@ pub fn list_all(path : String) {
 
 	if let Err(ref e) = run_all(Path::new(&dir_path),&mut disp_vec) {
 		println!("{}", e);
-		process::exit(1);
+        return;
 	}
     let mut max = 0;
     let mut screen_max = 5;
@@ -106,6 +106,7 @@ pub fn list_all(path : String) {
 
 fn run_all(dir: &Path, vec : &mut Vec<String>) -> Result<(), Box<dyn Error>> {
 	if dir.is_dir() {
+        // Source Url https://endler.dev/2018/ls/
 		for entry in fs::read_dir(dir)? {
 				let entry = entry?;
 				let file_name = entry.file_name().into_string().or_else(|f| Err(format!("Invalid entry: {:?}", f)))?;
