@@ -64,6 +64,15 @@ fn main() {
             // trim all whitespaces 
             command_t = command_t.replace(" ", "");
             match command_t.as_str() {
+                "listDir" => {
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls_tree::list_no_param(path.to_string())
+                        }
+                    },
                 "listDir-a" => {
                     // Check if input path exist
                         if !Path::new(path).exists() && path != "" {

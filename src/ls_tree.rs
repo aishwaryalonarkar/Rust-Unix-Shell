@@ -70,9 +70,12 @@ pub fn list_all(path : String) {
     if dir_path == "" {
         dir_path = String::from("./");
     }
-    println!("{}",dir_path);
+    if dir_path != "./" {
+        println!("{}",dir_path);
+    }
     let mut disp_vec : Vec<String> = Vec::new();
-
+    disp_vec.push(".".to_string());
+    disp_vec.push("..".to_string());
 	if let Err(ref e) = run_all(Path::new(&dir_path),&mut disp_vec) {
 		println!("{}", e);
         return;
@@ -111,6 +114,60 @@ fn run_all(dir: &Path, vec : &mut Vec<String>) -> Result<(), Box<dyn Error>> {
 				let entry = entry?;
 				let file_name = entry.file_name().into_string().or_else(|f| Err(format!("Invalid entry: {:?}", f)))?;
                 vec.push(file_name);
+		}
+	}
+	Ok(())
+}
+
+pub fn list_no_param(path : String) {
+    let mut dir_path = path;
+    if dir_path == "" {
+        dir_path = String::from("./");
+    }
+    let mut disp_vec : Vec<String> = Vec::new();
+
+    // Source Url https://endler.dev/2018/ls/
+	if let Err(ref e) = run_no_params(Path::new(&dir_path),&mut disp_vec) {
+		println!("{}", e);
+        return;
+	}
+    let mut max = 0;
+    let mut screen_max = 5;
+    for i in disp_vec.iter() {
+        if i.len() > max {
+            max = i.len();
+        }
+    }
+    if max>17 {
+        screen_max = 3;
+    }
+    let mut count = 0;
+    for i in disp_vec.iter() {
+        print!("{}",i);
+        count+=1;
+        if i.len() < max {
+            for _k in i.len()..max {
+                print!(" ");
+            }
+        }
+        print!("\t");
+        if count%screen_max == 0 {
+            println!("");
+        }
+    }
+    println!("");
+
+}
+
+fn run_no_params(dir: &Path, vec : &mut Vec<String>) -> Result<(), Box<dyn Error>> {
+	if dir.is_dir() {
+        // Source Url https://endler.dev/2018/ls/
+		for entry in fs::read_dir(dir)? {
+				let entry = entry?;
+				let file_name = entry.file_name().into_string().or_else(|f| Err(format!("Invalid entry: {:?}", f)))?;
+                if !file_name.starts_with(".") {
+                    vec.push(file_name);
+                }
 		}
 	}
 	Ok(())
