@@ -1,11 +1,18 @@
 mod util;
+mod ls_tree;
+mod ls;
+mod ls_color;
 mod rmallexn;
 use std::io::Write;
+use std::path::Path;
+
+// use std::fs;
 
 fn main() {
     let mut history = util::initialize_vector();
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
+    let command_ls: String = String::from("listDir"); //listDir
     let mut command:String = String::new();
 
     // Retrieve the history commands if any before starting the shell
@@ -34,9 +41,83 @@ fn main() {
         // Every command whether valid or invalid is added to the history list
         history = util::add_command_to_history(history, command.clone());
         
+
+        // splitting for listDir Options.
+        command = command.trim().to_string();
+        let g = command.split(" ");
+        let vec: Vec<&str> = g.collect();
+        let mut path = vec[vec.len()-1];
+
+
         if command == command_history {
             history = util::list_history(history);
         } 
+        else if vec[0] == command_ls {
+            
+            // Set default path ./ if no path input.
+            if path == "-a" || path == "-tree" || path == "-l" || path =="-color" || path == command_ls {
+                path = "";
+            }
+
+            // Remove path from command 
+            let mut command_t = command.replace(path, "");
+            // trim all whitespaces 
+            command_t = command_t.replace(" ", "");
+            match command_t.as_str() {
+                "listDir-a" => {
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls_tree::list_all(path.to_string())
+                        }
+                    },
+                "listDir-tree" => {
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls_tree::tree_display(path.to_string())
+                        }
+                    },
+                "listDir-l-color" => {
+                    
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                           ls_color::ls_color_main(path.to_string())
+                        }
+                    },
+                "listDir-color-l" =>{
+                        
+                        // Check if input path exist
+                            if !Path::new(path).exists() && path != "" {
+                                println!("Path does not exist -> {}", path);
+                            }
+                            else {
+                                ls_color::ls_color_main(path.to_string())    
+                            }
+                    },
+                "listDir-l" => {
+                    
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls::ls_main(path.to_string())    
+                        }
+                    },
+                _=>{
+                    println!("Invalid option");
+                    println!("listDir [-l] [-a] [-tree] [-color] <directory>");
+                }
+            }
+        }
         //check if command starts with rmallexn
         else if command.starts_with("rmallexn"){
             rmallexn::rmxn(command.clone());
