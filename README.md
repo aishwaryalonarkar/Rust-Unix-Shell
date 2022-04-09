@@ -5,7 +5,7 @@ a. cmd_history: Displays the history of commands entered in the command line.
 
 b. rmallexn(remove all except n): Remove all the files and directories in the directory path mentioned in the argument except the file mentioned.
 
-c. ls [-l][-a][-tree][-color] <directory>: List the contents of the directory with optional arguments.
+c. listDir [-l][-a][-tree][-color] <directory>: List the contents of the directory with optional arguments.
 
 d. rev_search(Reverse search and execute): Search in the history to check if the substring entered matches any entry and accordingly execute it
 
@@ -41,6 +41,16 @@ cmd uasge: listDir [-l] [-a] [-tree] [-color] <directory>
 
 # rmallexn
 Release 2
+Deletes the file and folder in a directory except the one passed as argument to the command
+
+Sample syntax: 
+1. rmallexn test/abc/def 
+The above command will delete all the files and directories in test/abc/ and keep only test/abc/def
+    
+2. rmallexn test/xyz/file1.txt
+The above command will delete all the files and directories in test/xyz/ and keep only test/xyz/file1.txt
+
+The file or the directory to keep should not have whitespaces in the name.
 
 # rev_search
 Release 3
@@ -50,3 +60,4 @@ Release 3
 
 # General attributes
 Release 3
+

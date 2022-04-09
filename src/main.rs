@@ -2,6 +2,7 @@ mod util;
 mod ls_tree;
 mod ls;
 mod ls_color;
+mod rmallexn;
 use std::io::Write;
 use std::path::Path;
 
@@ -57,69 +58,69 @@ fn main() {
             if path == "-a" || path == "-tree" || path == "-l" || path =="-color" || path == command_ls {
                 path = "";
             }
-            // else {
-                // Remove path from command 
-                let mut command_t = command.replace(path, "");
-                // trim all whitespaces 
-                command_t = command_t.replace(" ", "");
-                match command_t.as_str() {
 
-                    "listDir-a" => {
-                        // Check if input path exist
-                            if !Path::new(path).exists() && path != "" {
-                                println!("Path does not exist -> {}", path);
-                            }
-                            else {
-                                ls_tree::list_all(path.to_string())
-                            }
-                        },
-                    "listDir-tree" => {
-                        // Check if input path exist
-                            if !Path::new(path).exists() && path != "" {
-                                println!("Path does not exist -> {}", path);
-                            }
-                            else {
-                                ls_tree::tree_display(path.to_string())
-                            }
-                        },
-                    "listDir-l-color" => {
-                       
-                        // Check if input path exist
-                            if !Path::new(path).exists() && path != "" {
-                                println!("Path does not exist -> {}", path);
-                            }
-                            else {
-                                ls_color::ls_color_main(path.to_string())
-                            }
-                        },
-                    "listDir-color-l" =>{
-                         
-                         // Check if input path exist
-                             if !Path::new(path).exists() && path != "" {
-                                 println!("Path does not exist -> {}", path);
-                             }
-                             else {
-                                ls_color::ls_color_main(path.to_string())
-                             }
-                        },
-                    "listDir-l" => {
+            // Remove path from command 
+            let mut command_t = command.replace(path, "");
+            // trim all whitespaces 
+            command_t = command_t.replace(" ", "");
+            match command_t.as_str() {
+                "listDir-a" => {
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls_tree::list_all(path.to_string())
+                        }
+                    },
+                "listDir-tree" => {
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls_tree::tree_display(path.to_string())
+                        }
+                    },
+                "listDir-l-color" => {
+                    
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                           ls_color::ls_color_main(path.to_string())
+                        }
+                    },
+                "listDir-color-l" =>{
                         
                         // Check if input path exist
                             if !Path::new(path).exists() && path != "" {
                                 println!("Path does not exist -> {}", path);
                             }
                             else {
-                                ls::ls_main(path.to_string())
+                                ls_color::ls_color_main(path.to_string())    
                             }
-                        },
-
-                    _=>{
-                        println!("Invalid option");
-                        println!("listDir [-l] [-a] [-tree] [-color] <directory>");
-                    }
-                // }
+                    },
+                "listDir-l" => {
+                    
+                    // Check if input path exist
+                        if !Path::new(path).exists() && path != "" {
+                            println!("Path does not exist -> {}", path);
+                        }
+                        else {
+                            ls::ls_main(path.to_string())    
+                        }
+                    },
+                _=>{
+                    println!("Invalid option");
+                    println!("listDir [-l] [-a] [-tree] [-color] <directory>");
+                }
             }
-
+        }
+        //check if command starts with rmallexn
+        else if command.starts_with("rmallexn"){
+            rmallexn::rmxn(command.clone());
         }
         else if command == command_quit {
             println!("Quitting");
