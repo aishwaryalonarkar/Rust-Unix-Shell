@@ -39,12 +39,12 @@ cmd usage: cmd_history
     
     d. -color: Display the files in different colors as per their file type
 
-cmd uasge: listDir [-l] [-a] [-tree] [-color] <directory>
-1. listDir -l <directory>
-2. listDir -l -color <directory>
-3. listDir -tree <directory>
+cmd uasge: listDir [-l] [-a] [-tree] [-color] \<directory\>
+1. listDir -l \<directory\>
+2. listDir -l -color \<directory\>
+3. listDir -tree \<directory\>
 4. listDir -tree 
-5. listDir -a <directory>
+5. listDir -a \<directory\>
 6. listDir -a 
 
 # rmallexn
