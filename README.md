@@ -14,12 +14,13 @@ e. sortbytype (Sort by type): This command is used to combine multiple files of 
 f. quit: Use quit to get out of rust command line.
 
 # Crates
-1. json - 0.12.4
+1. json = 0.12.4
 2. colored = 2.0.0
 3. chrono = 0.4
 4. permissions = 0.3.0
 5. is_executable = 1.0.1
 6. libc = 0.2.122
+7. termion = 1.5.6
 
 # cmd_history
 1. Track down all the commands been entered onto the command line.
