@@ -9,6 +9,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 RUN curl https://getmic.ro | sh -s -- -y && mv micro /usr/bin/
 
 COPY src ./src
+COPY dummy-files ./dummy-files
 COPY Cargo.toml .
 COPY Cargo.lock .
 COPY init-fs.sh .
