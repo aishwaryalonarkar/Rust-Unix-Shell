@@ -6,7 +6,7 @@ use crate::ls_tree;
 use crate::ls_color;
 use crate::rev_search;
 use crate::rmallexn;
-
+use crate::pipe_operator;
 extern crate json;
 
 // Initialize the vector to store the list of commands entered on the shell
@@ -142,6 +142,10 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      if command == command_history {
          history = list_history(history);
      } 
+     else if command.contains("|"){
+
+        pipe_operator::pipe(command.clone());
+     }
      else if vec[0] == command_ls {
          
          // Set default path ./ if no path input.
@@ -220,7 +224,8 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      //check if command starts with rmallexn
      else if command.starts_with("rmallexn"){
          rmallexn::rmxn(command.clone());
-     } else if command == command_quit {
+     } 
+     else if command == command_quit {
          println!("Quitting");
          write_results_in_file(command_history, history.clone());
          return Vec::<String>::new();

@@ -4,6 +4,7 @@ mod ls;
 mod ls_color;
 mod rmallexn;
 mod rev_search;
+mod pipe_operator;
 use std::io::Write;
 
 fn main() {
