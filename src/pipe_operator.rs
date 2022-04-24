@@ -1,6 +1,6 @@
 use crate::util;
 
-pub fn pipe(command: String) {
+pub fn pipe(mut history:Vec<String>, command: String) {
     
     let command = command;
 
@@ -44,8 +44,9 @@ pub fn pipe(command: String) {
                 for items in chunks.iter(){
 
                     let cmd = items.trim().to_string();
-                    let history = util::initialize_vector();
-                    util::dispatch_function_helper(history.clone(), cmd.clone());
+                    
+                    history = util::dispatch_function_helper(history.clone(), cmd.clone());
+                    
                 }
             
             }
