@@ -11,7 +11,9 @@ d. rev_search(Reverse search and execute): Search in the history to check if the
 
 e. sortbytype (Sort by type): This command is used to combine multiple files of similar pattern or type and it will add those files into a one separate sub directory.
 
-f. quit: Use quit to get out of rust command line.
+f. pipe operator(|): This command is used to combine multiple command and run them sequentially. 
+
+g. quit: Use quit to get out of rust command line.
 
 # Crates
 1. json = 0.12.4
@@ -72,6 +74,14 @@ To simplify searches, this API also has provided the feature of provided the fun
 
 Ctrl('r') is the way to invoke that functionality.
 
+# General attributes
+
+1. | (pipe operator)
+The above command will combine multiple command and run them sequentially.
+
+Sample Syntax:
+
+listDir -a | listDir -l
 # sortbytype
 Release 3
 
