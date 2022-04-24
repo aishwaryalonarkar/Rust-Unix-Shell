@@ -145,7 +145,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      } else if command.contains("&") {
         attribute_background::background_execution(history.clone(), command.clone());
      } else if command.contains("|") {
-        pipe_operator::pipe(command.clone());
+        pipe_operator::pipe(history.clone(), command.clone());
      }
      else if vec[0] == command_ls {
          
