@@ -7,6 +7,7 @@ use crate::ls_color;
 use crate::rev_search;
 use crate::rmallexn;
 use crate::pipe_operator;
+use crate::attribute_background;
 extern crate json;
 
 // Initialize the vector to store the list of commands entered on the shell
@@ -141,9 +142,9 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
 
      if command == command_history {
          history = list_history(history);
-     } 
-     else if command.contains("|"){
-
+     } else if command.contains("&") {
+        attribute_background::background_execution(history.clone(), command.clone());
+     } else if command.contains("|") {
         pipe_operator::pipe(command.clone());
      }
      else if vec[0] == command_ls {
