@@ -81,7 +81,7 @@ The above command will combine multiple command and run them sequentially.
 
 Sample Syntax:
 
-listDir -a|listDir -l
+listDir -a | listDir -l
 # sortbytype
 Release 3
 
