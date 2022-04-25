@@ -4,6 +4,8 @@ mod ls;
 mod ls_color;
 mod rmallexn;
 mod rev_search;
+mod sortbyname;
+mod sortbytype;
 use std::io::Write;
 
 fn main() {
@@ -14,7 +16,23 @@ fn main() {
     history = util::retrieve_history(history);
 
     loop {
+
+        let cur_dir = std::env::current_dir();
+        let mut cur_dir_path : String = "".to_string();
+        match cur_dir {
+            Ok(_) => {
+                cur_dir_path = cur_dir.unwrap().into_os_string().into_string().unwrap();
+            },
+            Err(why)=> println!("Error : In getting path {}",why),
+        }
+
+        let vec_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
+        // println!("{:?}",vec_path );
         print!("rustshell@rustshell:~$ ");
+        if vec_path[1] != "" {
+            print!("{}$ ", vec_path[1]);
+        }
+
         // Flushes the output to stdout as prints without new line are buffered and we have 
         // to explicitly flush the buffer.
         std::io::stdout().flush().unwrap();

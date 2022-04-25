@@ -3,23 +3,38 @@ use std::fs;
 use std::path::Path;
 use std::error::Error;
 use std::fs::metadata;
+// use crate::output;
+use std::fs::File;
+use std::io::Write;
+use std::fs::OpenOptions;
 
-pub fn tree_display(path : String) {
+pub fn tree_display(path : String ,save_output: bool, output_path : &str) {
     let mut dir_path = path;
     if dir_path == "" {
         dir_path = String::from("./");
     }
     println!("{}",dir_path);
 
-	if let Err(ref e) = run(Path::new(&dir_path),0,Vec::new(),&dir_path) {
+    if save_output == true {
+        let _file = match File::create(output_path) {
+            Err(why) => panic!("couldn't create  {}", why),
+            Ok(file) => file,
+        };
+    }
+
+	if let Err(ref e) = run(Path::new(&dir_path),0,Vec::new(),&dir_path, save_output , &output_path) {
 		println!("{:?}", e);
         return;
 	}
+    
     println!("");
+    // println!("=================");
+    // // println!("{}",data);
 }
 
-fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) -> Result<(), Box<dyn Error>> {
+fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String, save_output: bool, output_path : &str) -> Result<(), Box<dyn Error>> {
 
+    // let mut data = data1.to_string();
 	if dir.is_dir() {
         level = level + 1;
 
@@ -37,11 +52,30 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) 
                 
                     println!("__{}", file_name);
 
+                    if save_output == true {
+                        let mut file = OpenOptions::new()
+                            .write(true)
+                            .append(true)
+                            .open(output_path)
+                            .unwrap();
+                        for _i in 1..level {
+                            if let Err(e) = write!(file, "    ") {
+                                eprintln!("Couldn't write to file: {}", e);
+                            }
+                        }
+                        if let Err(e) = write!(file, "|") {
+                            eprintln!("Couldn't write to file: {}", e);
+                        }
+
+                        if let Err(e) = writeln!(file, "__{}", &file_name.clone()) {
+                            eprintln!("Couldn't write to file: {}", e);
+                        }
+
+                    }
+
                     let s1 = "/".to_string();
                     let s2 = file_name.clone();
-                    // contains file_name for current directory 
                     let mut s3 = String::new();
-                    // contains entire path
                     let mut s4 = String::new();
                     s3 += &s2;
                     s3 += &s1;
@@ -52,7 +86,7 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) 
                         s4 += i;
                     }
 
-                    if let Err(ref e) = run(Path::new(&s4),level,vec.clone(),dir_path) {
+                    if let Err(ref e) = run(Path::new(&s4),level,vec.clone(),dir_path, save_output, &output_path) {
                             println!("{:?}", e);
                             break;
                     }
@@ -65,11 +99,12 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String) 
     
 }
 
-pub fn list_all(path : String) {
+pub fn list_all(path : String ,save_output: bool, output_path : &str) {
     let mut dir_path = path;
     if dir_path == "" {
         dir_path = String::from("./");
     }
+
 
     let md = metadata(&dir_path).unwrap();
     if md.is_file() {
@@ -97,21 +132,39 @@ pub fn list_all(path : String) {
         if max>17 {
             screen_max = 3;
         }
+
+        let mut data : String = "".to_owned();
         let mut count = 0;
         for i in disp_vec.iter() {
             print!("{}",i);
+            data.push_str(i);
             count+=1;
             if i.len() < max {
                 for _k in i.len()..max {
                     print!(" ");
+                    data.push_str(" ");
                 }
             }
             print!("\t");
+            data.push_str("\t");
+
             if count%screen_max == 0 {
                 println!("");
+                data.push_str("\n");
             }
         }
         println!("");
+        
+        if save_output == true {
+            let mut file = match File::create(output_path) {
+                Err(why) => panic!("couldn't create  {}", why),
+                Ok(file) => file,
+            };
+            match file.write_all(data.as_bytes()) {
+                Err(why) => panic!("couldn't write to  {}", why),
+                Ok(_) => {},
+            }
+        }
         
     }
 }
@@ -128,7 +181,7 @@ fn run_all(dir: &Path, vec : &mut Vec<String>) -> Result<(), Box<dyn Error>> {
 	Ok(())
 }
 
-pub fn list_no_param(path : String) {
+pub fn list_no_param(path : String ,save_output: bool, output_path : &str) {
     let mut dir_path = path;
     if dir_path == "" {
         dir_path = String::from("./");
@@ -158,17 +211,35 @@ pub fn list_no_param(path : String) {
             screen_max = 3;
         }
         let mut count = 0;
+        let mut data : String = "".to_owned();
+
         for i in disp_vec.iter() {
             print!("{}",i);
+            data.push_str(i);
+
             count+=1;
             if i.len() < max {
                 for _k in i.len()..max {
                     print!(" ");
+                    data.push_str(" ");
                 }
             }
             print!("\t");
+            data.push_str("\t");
             if count%screen_max == 0 {
                 println!("");
+                data.push_str("\n");
+            }
+        }
+
+        if save_output == true {
+            let mut file = match File::create(output_path) {
+                Err(why) => panic!("couldn't create  {}", why),
+                Ok(file) => file,
+            };
+            match file.write_all(data.as_bytes()) {
+                Err(why) => panic!("couldn't write to  {}", why),
+                Ok(_) => {},
             }
         }
         println!("");

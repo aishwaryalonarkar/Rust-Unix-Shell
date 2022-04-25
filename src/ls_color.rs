@@ -1,6 +1,9 @@
 extern crate chrono;
 extern crate permissions;
 extern crate libc;
+use std::fs::File;
+use std::io::Write;
+use std::fs::OpenOptions;
 
 use colored::Colorize;
 use chrono::*;
@@ -11,14 +14,19 @@ use std::os::unix::fs::MetadataExt;
 use libc::{S_IRGRP, S_IROTH, S_IRUSR, S_IWGRP, S_IWOTH, S_IWUSR, S_IXGRP, S_IXOTH, S_IXUSR};
 use std::os::unix::fs::PermissionsExt;
 
-pub fn ls_color_main(path: String) {
+pub fn ls_color_main(path: String, save_output: bool, output_path : &str) {
     let mut collected_path = path;
 
     // If no arguments are given by user then converting it into default path
     if collected_path == "" {
         collected_path = String::from("./");
     }
-
+    if save_output == true {
+        let _file = match File::create(output_path) {
+            Err(why) => panic!("couldn't create  {}", why),
+            Ok(file) => file,
+        };
+    }
     let sample_path = PathBuf::from(&collected_path);
     let sample_meta = fs::metadata(&sample_path).unwrap();
 
@@ -43,7 +51,21 @@ pub fn ls_color_main(path: String) {
             let sym_s_grpup_permission = permission_checker(sym_sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
             let sym_s_other_permission = permission_checker(sym_sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
-            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name.cyan(), sym_sample_path.into_os_string().into_string().unwrap());
+            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name.cyan(), sym_sample_path.clone().into_os_string().into_string().unwrap());
+            
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name.cyan(), sym_sample_path.clone().into_os_string().into_string().unwrap()  
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
+
             return;
         }
 
@@ -65,10 +87,48 @@ pub fn ls_color_main(path: String) {
 
         if sample_file_name.ends_with("tar.gz")  {
             println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name.red().bold());
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name.red().bold()    
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
+
         } else if sample_path.is_executable() {
             println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name.green().bold());
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name.green().bold()    
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
+        
         } else {
             println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name);
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                "-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
         }
 
         return;
@@ -79,7 +139,18 @@ pub fn ls_color_main(path: String) {
 
     // Printing header for listDir command
     println!("{} \t {} \t {} {} \t {} \t {} \t {}","Permission".bold(), "Links".bold(),"User".bold(),"Group".bold(),"size".bold(),"Modified".bold(),"Name".bold());
-
+    if save_output == true {
+        let mut file = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(output_path)
+        .unwrap();
+        if let Err(e) = writeln!(file, 
+            "{} \t {} \t {} {} \t {} \t {} \t {}","Permission".bold(), "Links".bold(),"User".bold(),"Group".bold(),"size".bold(),"Modified".bold(),"Name".bold()
+        ) {
+            eprintln!("Couldn't write to file: {}", e);
+        }
+    }
     // Traversing through all files and folders from current path
     paths.for_each(|initial| {
         let initial = initial.unwrap();
@@ -88,11 +159,11 @@ pub fn ls_color_main(path: String) {
         // https://doc.rust-lang.org/std/fs/struct.Metadata.html
         let metadata = path.metadata().unwrap();
         let file_mode = metadata.permissions().mode();
-        metadata_and_print(file_mode as u32,path.clone());
+        metadata_and_print(file_mode as u32,path.clone() , save_output , &output_path);
     })
 }
 
-pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf)  {
+pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf, save_output: bool, output_path : &str)  {
 
     // https://doc.rust-lang.org/std/fs/struct.Metadata.html
     // Collecting metadata about particular file or folder
@@ -151,6 +222,18 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf)  {
         if metadata.is_dir() {
             // If yes, then printing it with blue color
             println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.blue().bold());
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.blue().bold()
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
         } else if metadata.is_file() { // Checking is file or not
 
             if symbolic.is_symlink() {
@@ -162,13 +245,64 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf)  {
                 let other_permission = permission_checker(sym_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
                 // Printing collected data and printing symbolic file with cyan color and target path
-                println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name.cyan(),sym_path.into_os_string().into_string().unwrap());
+                println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name.cyan(),sym_path.clone().into_os_string().into_string().unwrap());
+                if save_output == true {
+                    let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open(output_path)
+                    .unwrap();
+                    if let Err(e) = writeln!(file, 
+                        "l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name.cyan(),sym_path.clone().into_os_string().into_string().unwrap()
+                    ) {
+                        eprintln!("Couldn't write to file: {}", e);
+                    }
+                }
+
             } else if fn_path.is_executable() { // Cheking executable and and assigning green colour
                 println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.green().bold());
+                if save_output == true {
+                    let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open(output_path)
+                    .unwrap();
+                    if let Err(e) = writeln!(file, 
+                        "{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.green().bold()
+                    ) {
+                        eprintln!("Couldn't write to file: {}", e);
+                    }
+                }
+            
             } else if file_name.ends_with(".tar.gz") { // Checking tar file and assigning red colour
                 println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.red().bold());
+                if save_output == true {
+                    let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open(output_path)
+                    .unwrap();
+                    if let Err(e) = writeln!(file, 
+                        "{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name.red().bold()
+                    ) {
+                        eprintln!("Couldn't write to file: {}", e);
+                    }
+                }
+
             } else { // rest of the files
-                println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name)
+                println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name);
+                if save_output == true {
+                    let mut file = OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open(output_path)
+                    .unwrap();
+                    if let Err(e) = writeln!(file, 
+                        "{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(), user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name
+                    ) {
+                        eprintln!("Couldn't write to file: {}", e);
+                    }
+                }
             }
         }
     }

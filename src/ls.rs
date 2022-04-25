@@ -1,6 +1,9 @@
 extern crate chrono;
 extern crate permissions;
 extern crate libc;
+use std::fs::File;
+use std::io::Write;
+use std::fs::OpenOptions;
 
 use chrono::*;
 use std::fs::{self};
@@ -9,7 +12,7 @@ use std::os::unix::fs::MetadataExt;
 use libc::{S_IRGRP, S_IROTH, S_IRUSR, S_IWGRP, S_IWOTH, S_IWUSR, S_IXGRP, S_IXOTH, S_IXUSR};
 use std::os::unix::fs::PermissionsExt;
 
-pub fn ls_main(path: String) {
+pub fn ls_main(path: String, save_output: bool, output_path : &str) {
 
     let mut collected_path = path;
 
@@ -18,6 +21,12 @@ pub fn ls_main(path: String) {
         collected_path = String::from("./");
     }
 
+    if save_output == true {
+        let _file = match File::create(output_path) {
+            Err(why) => panic!("couldn't create  {}", why),
+            Ok(file) => file,
+        };
+    }
     // Handling only last file condition...
 
     let sample_path = PathBuf::from(&collected_path);
@@ -43,7 +52,21 @@ pub fn ls_main(path: String) {
             let sym_s_grpup_permission = permission_checker(sym_sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
             let sym_s_other_permission = permission_checker(sym_sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
-            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.into_os_string().into_string().unwrap());
+            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.clone().into_os_string().into_string().unwrap());
+           
+            if save_output == true {
+                
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.clone().into_os_string().into_string().unwrap()
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
             return;
         }
 
@@ -64,6 +87,21 @@ pub fn ls_main(path: String) {
         let s_other_permission = permission_checker(sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
         println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name);
+        
+        if save_output == true {
+                
+            let mut file = OpenOptions::new()
+            .write(true)
+            .append(true)
+            .open(output_path)
+            .unwrap();
+            if let Err(e) = writeln!(file, 
+                "-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name
+            ) {
+                eprintln!("Couldn't write to file: {}", e);
+            }
+        }
+        
         return;
     }    
 
@@ -72,6 +110,19 @@ pub fn ls_main(path: String) {
     // Printing header for listDir command
     println!("{} \t {} \t {} {} \t {} \t {} \t {}","Permission", "Links", "User", "Group", "size", "Modified", "Name");
 
+    if save_output == true {
+                
+        let mut file = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(output_path)
+        .unwrap();
+        if let Err(e) = writeln!(file, 
+            "{} \t {} \t {} {} \t {} \t {} \t {}","Permission", "Links", "User", "Group", "size", "Modified", "Name"
+        ) {
+            eprintln!("Couldn't write to file: {}", e);
+        }
+    }
     // Traversing through all files and folders from current path
     paths.for_each(|initial| {
 
@@ -86,11 +137,11 @@ pub fn ls_main(path: String) {
         let file_mode = metadata.permissions().mode();
         
         // Calling a function to interpret metadata and printing all data
-        metadata_and_print(file_mode as u32,path.clone());
+        metadata_and_print(file_mode as u32,path.clone() , save_output , &output_path);
     })
 }
 
-pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf)  {
+pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf, save_output: bool, output_path : &str)  {
 
     // https://doc.rust-lang.org/std/fs/struct.Metadata.html
     // Collecting metadata about particular file or folder
@@ -154,11 +205,38 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf)  {
             let other_permission = permission_checker(sym_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
             // Printing collected data and target path of symbolic link
-            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name,sym_path.into_os_string().into_string().unwrap());
+            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name,sym_path.clone().into_os_string().into_string().unwrap());
+       
+            if save_output == true {          
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name,sym_path.clone().into_os_string().into_string().unwrap()
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
+
         } else {
 
             // Printing collected data of all files and folders except symbolic link
             println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name);
+            
+            if save_output == true {
+                let mut file = OpenOptions::new()
+                .write(true)
+                .append(true)
+                .open(output_path)
+                .unwrap();
+                if let Err(e) = writeln!(file, 
+                    "{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name
+                ) {
+                    eprintln!("Couldn't write to file: {}", e);
+                }
+            }
         }
     }
 }
