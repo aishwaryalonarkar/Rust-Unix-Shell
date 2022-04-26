@@ -21,6 +21,8 @@ f. quit: Use quit to get out of rust command line.
 5. is_executable = 1.0.1
 6. libc = 0.2.122
 7. termion = 1.5.6
+8. pbr = "1.0.4"
+9. fs-utils = "1.1.4"
 
 # cmd_history
 1. Track down all the commands been entered onto the command line.
