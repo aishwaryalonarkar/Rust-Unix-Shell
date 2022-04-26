@@ -168,9 +168,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
         attribute_background::background_execution(history.clone(), command.clone());
      } else if command.contains("|") {
         pipe_operator::pipe(history.clone(), command.clone());
-     }
-     
-     else {
+     } else {
         if command.contains(" >") {
             let cmd = &command_out;
             let vec: Vec<&str> = cmd.split(">").collect();
