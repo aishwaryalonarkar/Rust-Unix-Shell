@@ -31,8 +31,10 @@ fn main() {
 
         let vec_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
         print!("rustshell@rustshell:~$ ");
-        if vec_path[1] != "" {
-            print!("{}$ ", vec_path[1]);
+        if vec_path.len() > 1 {
+            if vec_path[1] != "" {
+                print!("{}$ ", vec_path[1]);
+            }
         }
 
         // Flushes the output to stdout as prints without new line are buffered and we have 
