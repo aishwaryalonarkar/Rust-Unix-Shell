@@ -30,13 +30,17 @@ fn main() {
             Err(why)=> println!("Error : In getting path {}",why),
         }
 
-        let vec_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
-        print!("rustshell@rustshell:~$ ");
+        let mut vec_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
+        if !cur_dir_path.contains("Rust-Unix-Shell") {
+            vec_path = cur_dir_path.split("/home").collect();
+        }
+        print!("rustshell@rustshell:~");
         if vec_path.len() > 1 {
             if vec_path[1] != "" {
-                print!("{}$ ", vec_path[1]);
+                print!("{}", vec_path[1]);
             }
         }
+        print!{"$ "}
 
         // Flushes the output to stdout as prints without new line are buffered and we have 
         // to explicitly flush the buffer.
