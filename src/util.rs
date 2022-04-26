@@ -12,6 +12,7 @@ use crate::validator;
 
 use crate::pipe_operator;
 use crate::attribute_background;
+use crate::input_redirection;
 extern crate json;
 
 // Initialize the vector to store the list of commands entered on the shell
@@ -168,6 +169,8 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
         attribute_background::background_execution(history.clone(), command.clone());
      } else if command.contains("|") {
         pipe_operator::pipe(history.clone(), command.clone());
+     } else if command.contains("<") {
+        input_redirection::redirection(history.clone(),command.clone());
      }
      
      else {
