@@ -13,6 +13,7 @@ COPY dummy-files ./dummy-files
 COPY Cargo.toml .
 COPY Cargo.lock .
 COPY init-fs.sh .
+COPY input.json .
 RUN chmod +x init-fs.sh
 RUN ./init-fs.sh
 RUN cargo build
