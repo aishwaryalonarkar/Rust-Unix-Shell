@@ -177,22 +177,26 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
         if command.contains(" >") {
             let cmd = &command_out;
             let vec: Vec<&str> = cmd.split(">").collect();
-            let path_to_output = vec[1].clone();
 
-            let mut cmd1 = command_out.clone();
+            if vec.len() == 2 {
+                let path_to_output = vec[1].clone();
 
-            cmd1 = cmd1.clone().replace(">", "");
-            cmd1 = cmd1.clone().replace(path_to_output, "");
-            command = cmd1.clone().trim().to_string();
+                let mut cmd1 = command_out.clone();
+                cmd1 = cmd1.clone().replace(">", "");
+                cmd1 = cmd1.clone().replace(path_to_output, "");
+                command = cmd1.clone().trim().to_string();
 
-            if Path::new(path_to_output.trim()).exists() {
-                println!("Error : File already exists. Output not saved");
+                if Path::new(path_to_output.trim()).exists() {
+                    println!("Error : File already exists. Output not saved");
+                }
+
+                else {    
+                    save_output = true;
+                    output_path = path_to_output.trim();
+                }
             }
-
-            else {    
-                save_output = true;
-                output_path = path_to_output.trim();
-
+            else {
+                command = "".to_string();
             }
         }
 
@@ -214,13 +218,11 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
                 vec.remove(*i);
             }
 
-
             let mut path = vec[vec.len()-1];
 
             if path.starts_with("-") || path == &command_ls {
                 path = "";
             }
-
 
             else if !path.starts_with("-") && vec[vec.len()-1]!=&command_ls {
                 vec.pop();

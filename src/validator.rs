@@ -13,13 +13,17 @@ pub fn validate_command(user_command : String) -> bool {
      if command.contains(" >") {
          let cmd = &command_out;
          let vec: Vec<&str> = cmd.split(">").collect();
-         let path_to_output = vec[1].clone();
+         if vec.len() == 2 {
+            let path_to_output = vec[1].clone();
+            let mut cmd1 = command_out.clone();
 
-         let mut cmd1 = command_out.clone();
-
-         cmd1 = cmd1.clone().replace(">", "");
-         cmd1 = cmd1.clone().replace(path_to_output, "");
-         command = cmd1.clone().trim().to_string();
+            cmd1 = cmd1.clone().replace(">", "");
+            cmd1 = cmd1.clone().replace(path_to_output, "");
+            command = cmd1.clone().trim().to_string();
+         }
+         else {
+             return false;
+         }
 
      }
 
