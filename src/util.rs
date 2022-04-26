@@ -296,8 +296,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
             let cur_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
 
             if cur_path.len() > 1 && path.contains("..") { // Check if cuurent directory is Rust-Unix-Shell prevent back
-               if cur_path[1] == "" {}
-               else {  
+                if cur_path[1] != "" {  
                     if Path::new(path.trim()).exists() {
                         match std::env::set_current_dir(path) {
                             Ok(_) => {},
