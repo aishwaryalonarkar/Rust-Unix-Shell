@@ -11,8 +11,9 @@ d. rev_search(Reverse search and execute): Search in the history to check if the
 
 e. sortbytype (Sort by type): This command is used to combine multiple files of similar pattern or type and it will add those files into a one separate sub directory.
 
-f. quit: Use quit to get out of rust command line.
+g. input redirection (<): This command redirects the input from a file and passes it to a command as parameter insted of passing the parameter from standard input.
 
+h. quit: Use quit to get out of rust command line.
 # Crates
 1. json = 0.12.4
 2. colored = 2.0.0
@@ -23,6 +24,7 @@ f. quit: Use quit to get out of rust command line.
 7. termion = 1.5.6
 8. pbr = "1.0.4"
 9. fs-utils = "1.1.4"
+10. rustc-serialize = "0.3.24"
 
 # cmd_history
 1. Track down all the commands been entered onto the command line.
@@ -106,7 +108,9 @@ g. quit: Use quit to get out of rust command line.
 5. is_executable = 1.0.1
 6. libc = 0.2.122
 7. termion = 1.5.6
-
+8. pbr = "1.0.4"
+9. fs-utils = "1.1.4"
+10. rustc-serialize = "0.3.24"
 # cmd_history
 1. Track down all the commands been entered onto the command line.
 2. Displays the history of commands entered.
@@ -165,6 +169,15 @@ The above command will combine multiple command and run them sequentially.
 Sample Syntax:
 
 listDir -a | listDir -l
+
+2. < (input redirection)
+The above command redirects the input parameter to a command from a file.
+
+Sample Syntax:
+
+listDir -a < input.json
+
+This will take the input for listDir -a from the input.json file and run the listDir command.
 # sortbytype
 Release 3
 
