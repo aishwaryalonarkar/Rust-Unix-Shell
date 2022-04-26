@@ -13,8 +13,8 @@ pub fn sort_by_type_main(file_type : &str, dest : String) {
     let mut flag = true;
 
     // Checking if folder already exists or not, if not then create a new folder
-    let b: bool = Path::new(&dest.clone()).is_dir();
-    if !b {
+    let check: bool = Path::new(&dest.clone()).is_dir();
+    if !check {
         fs::create_dir(&dest).unwrap_or_else(|error| {
             if error.kind() == ErrorKind::AlreadyExists {
                 println!("Folder already exists! 😐");
