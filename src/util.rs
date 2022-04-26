@@ -9,6 +9,7 @@ use crate::rmallexn;
 use crate::sortbytype;
 use crate::sortbyname;
 
+
 use crate::pipe_operator;
 use crate::attribute_background;
 extern crate json;
@@ -193,7 +194,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      }
     
      else if command.starts_with(&command_ls) {
-         
+
         let g = command.split(" ");
         let mut vec: Vec<&str> = g.collect();
         let mut vec_indices = Vec::new(); // for removing extra spaces
@@ -253,7 +254,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      else if command.starts_with("rmallexn") {
          rmallexn::rmxn(command.clone());
      } 
-     
+
      else if command == command_quit {
          println!("Quitting");
          write_results_in_file(command_history, history.clone());
