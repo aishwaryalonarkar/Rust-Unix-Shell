@@ -170,203 +170,211 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
         pipe_operator::pipe(history.clone(), command.clone());
      }
      
-     if command.contains(" >") {
-         let cmd = &command_out;
-         let vec: Vec<&str> = cmd.split(">").collect();
-         let path_to_output = vec[1].clone();
+     else {
+        if command.contains(" >") {
+            let cmd = &command_out;
+            let vec: Vec<&str> = cmd.split(">").collect();
+            let path_to_output = vec[1].clone();
 
-         let mut cmd1 = command_out.clone();
+            let mut cmd1 = command_out.clone();
 
-         cmd1 = cmd1.clone().replace(">", "");
-         cmd1 = cmd1.clone().replace(path_to_output, "");
-         command = cmd1.clone().trim().to_string();
+            cmd1 = cmd1.clone().replace(">", "");
+            cmd1 = cmd1.clone().replace(path_to_output, "");
+            command = cmd1.clone().trim().to_string();
 
-        if Path::new(path_to_output.trim()).exists() {
-            println!("Error : File already exists. Output not saved");
-        }
+            if Path::new(path_to_output.trim()).exists() {
+                println!("Error : File already exists. Output not saved");
+            }
 
-        else {    
-            save_output = true;
-            output_path = path_to_output.trim();
+            else {    
+                save_output = true;
+                output_path = path_to_output.trim();
 
-        }
-     }
-
-     if command == command_history {
-         history = list_history(history,save_output,&output_path);
-     }
-    
-     else if command.starts_with(&command_ls) {
-
-        let g = command.split(" ");
-        let mut vec: Vec<&str> = g.collect();
-        let mut vec_indices = Vec::new(); // for removing extra spaces
-        for i in 0..vec.len() { 
-            if vec[i] == "" {
-                vec_indices.push(i);
             }
         }
-        for i in vec_indices.iter().rev() {
-            vec.remove(*i);
-        }
 
-
-        let mut path = vec[vec.len()-1];
-
-        if path.starts_with("-") || path == &command_ls {
-            path = "";
-        }
-
-
-        else if !path.starts_with("-") && vec[vec.len()-1]!=&command_ls {
-            vec.pop();
+        if command == command_history {
+            history = list_history(history,save_output,&output_path);
         }
         
-        if !Path::new(path).exists() && path != "" {
-            println!("Error : Path does not exist -> {}", path);
-        }
-        else {
-            match vec[..] {
-                [_ls] => {ls_tree::list_no_param(path.to_string() ,save_output,&output_path)},
-                [_ls, a] => {
-                    match a {
-                        "-tree" => { ls_tree::tree_display(path.to_string(),save_output,&output_path); }
-                        "-a" => { ls_tree::list_all(path.to_string(),save_output,&output_path); }
-                        "-l" => { ls::ls_main(path.to_string() ,save_output,&output_path); }
-                        // "-color" => { println!(" color {}", a); }
-                        _=> { println!("Error : Invalid Option {} ",a); }
-                    }
-                },
-                [_ls, a,b] => {
-                    if (a == "-color" && b == "-l") || (b == "-color" && a == "-l") {
-                        ls_color::ls_color_main(path.to_string(),save_output,&output_path);
-                    }
-                    else  {
-                        println!("Error : Invalid Option");
-                        println!("Correct Usage : listDir [-l] [-a] [-tree] [-color] <directory>");
-                    }
-                },
-                _=> {
-                    println!("Error : Invalid number of arguments");
+        else if command.starts_with(&command_ls) {
+
+            let g = command.split(" ");
+            let mut vec: Vec<&str> = g.collect();
+            let mut vec_indices = Vec::new(); // for removing extra spaces
+            for i in 0..vec.len() { 
+                if vec[i] == "" {
+                    vec_indices.push(i);
                 }
             }
+            for i in vec_indices.iter().rev() {
+                vec.remove(*i);
+            }
+
+
+            let mut path = vec[vec.len()-1];
+
+            if path.starts_with("-") || path == &command_ls {
+                path = "";
+            }
+
+
+            else if !path.starts_with("-") && vec[vec.len()-1]!=&command_ls {
+                vec.pop();
+            }
+            
+            if !Path::new(path).exists() && path != "" {
+                println!("Error : Path does not exist -> {}", path);
+            }
+            else {
+                match vec[..] {
+                    [_ls] => {ls_tree::list_no_param(path.to_string() ,save_output,&output_path)},
+                    [_ls, a] => {
+                        match a {
+                            "-tree" => { ls_tree::tree_display(path.to_string(),save_output,&output_path); }
+                            "-a" => { ls_tree::list_all(path.to_string(),save_output,&output_path); }
+                            "-l" => { ls::ls_main(path.to_string() ,save_output,&output_path); }
+                            // "-color" => { println!(" color {}", a); }
+                            _=> { println!("Error : Invalid Option {} ",a); }
+                        }
+                    },
+                    [_ls, a,b] => {
+                        if (a == "-color" && b == "-l") || (b == "-color" && a == "-l") {
+                            ls_color::ls_color_main(path.to_string(),save_output,&output_path);
+                        }
+                        else  {
+                            println!("Error : Invalid Option");
+                            println!("Correct Usage : listDir [-l] [-a] [-tree] [-color] <directory>");
+                        }
+                    },
+                    _=> {
+                        println!("Error : Invalid number of arguments");
+                    }
+                }
+            }
+            
         }
+        //check if command starts with rmallexn
+        else if command.starts_with("rmallexn") {
+            rmallexn::rmxn(command.clone());
+        } 
+
+        else if command == command_quit {
+            println!("Quitting");
+            write_results_in_file(command_history, history.clone());
+            return Vec::<String>::new();
+        } 
         
-     }
-     //check if command starts with rmallexn
-     else if command.starts_with("rmallexn") {
-         rmallexn::rmxn(command.clone());
-     } 
+        else if command == command_rev_search {
+            history = rev_search::rev_search(history);
+        } 
+        
+        else if command.starts_with(&command_cd) {
+            println!("{} agaya cd me ", command);
+            let mut vec_path: Vec<&str> = command.split(" ").collect();
 
-     else if command == command_quit {
-         println!("Quitting");
-         write_results_in_file(command_history, history.clone());
-         return Vec::<String>::new();
-     } 
-     
-     else if command == command_rev_search {
-         history = rev_search::rev_search(history);
-     } 
-     
-     else if command.starts_with(&command_cd) {
-        let mut vec_path: Vec<&str> = command.split(" ").collect();
-
-        let mut vec_indices = Vec::new(); // for removing extra spaces
-        for i in 0..vec_path.len() { 
-            if vec_path[i] == "" {
-                vec_indices.push(i);
+            let mut vec_indices = Vec::new(); // for removing extra spaces
+            for i in 0..vec_path.len() { 
+                if vec_path[i] == "" {
+                    vec_indices.push(i);
+                }
             }
-        }
-        for i in vec_indices.iter().rev() {
-            vec_path.remove(*i);
-        }
-
-        if vec_path.len() > 1 {
-            let path = vec_path[1];  
-
-            let cur_dir = std::env::current_dir();
-            let mut cur_dir_path : String = "".to_string();
-            match cur_dir {
-                Ok(_) => {
-                    cur_dir_path = cur_dir.unwrap().into_os_string().into_string().unwrap();
-                },
-                Err(why)=> println!("Error : In getting path {}",why),
+            for i in vec_indices.iter().rev() {
+                vec_path.remove(*i);
             }
 
-            let cur_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
+            if vec_path.len() > 1 {
+                let path = vec_path[1];  
 
-            if cur_path.len() > 1 && path.contains("..") { // Check if cuurent directory is Rust-Unix-Shell prevent back
-                if cur_path[1] != "" {  
+                let cur_dir = std::env::current_dir();
+                let mut cur_dir_path : String = "".to_string();
+                match cur_dir {
+                    Ok(_) => {
+                        cur_dir_path = cur_dir.unwrap().into_os_string().into_string().unwrap();
+                    },
+                    Err(why)=> println!("Error : In getting path {}",why),
+                }
+
+                let cur_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
+
+                if cur_path.len() > 1 && path.contains("..") { // Check if cuurent directory is Rust-Unix-Shell prevent back
+                    if cur_path[1] != "" {  
+                        if Path::new(path.trim()).exists() {
+                            match std::env::set_current_dir(path) {
+                                Ok(_) => {
+                                    println!("{} <= cd .. ", command);
+                                },
+                                Err(why) => println!("Error in cd {}", why),
+                            }
+                        }
+                        else {
+                            println!("Error : No such directory")
+                        }
+                }
+                }
+                else if cur_path.len() == 2 {
                     if Path::new(path.trim()).exists() {
                         match std::env::set_current_dir(path) {
-                            Ok(_) => {},
+                            Ok(_) => {
+                                println!("{} <= cd .. ", command);
+                            },
                             Err(why) => println!("Error in cd {}", why),
                         }
                     }
                     else {
                         println!("Error : No such directory")
                     }
-               }
+                }
             }
-            else if cur_path.len() == 2 {
-                if Path::new(path.trim()).exists() {
-                    match std::env::set_current_dir(path) {
-                        Ok(_) => {},
-                        Err(why) => println!("Error in cd {}", why),
+        }
+
+        else if command.starts_with(&command_sort) {
+            let g = command.split(" ");
+            let mut vec: Vec<&str> = g.collect();
+
+            let mut vec_indices = Vec::new(); // for removing extra spaces
+            for i in 0..vec.len() { 
+                if vec[i] == "" {
+                    vec_indices.push(i);
+                }
+            }
+            for i in vec_indices.iter().rev() {
+                vec.remove(*i);
+            }
+
+            if vec.len() == 4 {
+                let option = vec[1];
+                let ext_name = vec[2];
+                let directory = vec[3].clone();
+                if option == "-n" {
+                    sortbyname::sort_by_name_main(ext_name, directory.to_string());
+                }
+                else if option == "-t" {
+                    if ext_name.starts_with(".") {
+                        sortbytype::sort_by_type_main(ext_name, directory.to_string());
+                    } else {
+                        println!("Error : Invalid extention");
+                        println!("Correct Usage : sort -t .ext <directory_name>");
                     }
                 }
                 else {
-                    println!("Error : No such directory")
-                }
-            }
-        }
-     }
-
-     else if command.starts_with(&command_sort) {
-        let g = command.split(" ");
-        let mut vec: Vec<&str> = g.collect();
-
-        let mut vec_indices = Vec::new(); // for removing extra spaces
-        for i in 0..vec.len() { 
-            if vec[i] == "" {
-                vec_indices.push(i);
-            }
-        }
-        for i in vec_indices.iter().rev() {
-            vec.remove(*i);
-        }
-
-        if vec.len() == 4 {
-            let option = vec[1];
-            let ext_name = vec[2];
-            let directory = vec[3].clone();
-            if option == "-n" {
-                sortbyname::sort_by_name_main(ext_name, directory.to_string());
-            }
-            else if option == "-t" {
-                if ext_name.starts_with(".") {
-                    sortbytype::sort_by_type_main(ext_name, directory.to_string());
-                } else {
-                    println!("Error : Invalid extention");
-                    println!("Correct Usage : sort -t .ext <directory_name>");
+                    println!("Error : Invalid Option");
+                    println!("Correct Usage : sort [-t] [-n] .ext/name <directory_name>");
                 }
             }
             else {
-                println!("Error : Invalid Option");
+                println!("Error : Invalid Number or Arguments in Sort");
                 println!("Correct Usage : sort [-t] [-n] .ext/name <directory_name>");
             }
+
         }
+
+
         else {
-            println!("Error : Invalid Number or Arguments in Sort");
-            println!("Correct Usage : sort [-t] [-n] .ext/name <directory_name>");
+            println!("Invalid command");
         }
-
-     }
-
-
-     else {
-         println!("Invalid command");
-     }
+    
+    }
 
      history
 }
