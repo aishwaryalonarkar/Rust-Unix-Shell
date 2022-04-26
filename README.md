@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Rust-Unix-Shell
 
 Implementation of Unix Shell in Rust. Following are the features to be impelemented in the Unix Shell with Rust:
@@ -169,5 +168,3 @@ Release 3
 
 # General attributes
 Release 3
-
->>>>>>> c64225129e3c45c73294ab3fa2f603c1067041cc

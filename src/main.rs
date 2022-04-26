@@ -29,7 +29,6 @@ fn main() {
         }
 
         let vec_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
-        // println!("{:?}",vec_path );
         print!("rustshell@rustshell:~$ ");
         if vec_path[1] != "" {
             print!("{}$ ", vec_path[1]);
