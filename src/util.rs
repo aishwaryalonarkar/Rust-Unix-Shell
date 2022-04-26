@@ -281,29 +281,43 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
             vec_path.remove(*i);
         }
 
-        let path = vec_path[1];  
+        if vec_path.len() > 1 {
+            let path = vec_path[1];  
 
-        let cur_dir = std::env::current_dir();
-        let mut cur_dir_path : String = "".to_string();
-        match cur_dir {
-            Ok(_) => {
-                cur_dir_path = cur_dir.unwrap().into_os_string().into_string().unwrap();
-            },
-            Err(why)=> println!("Error : In getting path {}",why),
-        }
-
-        let cur_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
-
-        if cur_path[1] == "" && path.contains("..") {} // Check if cuurent directory is Rust-Unix-Shell prevent back
-        else {
-            if Path::new(path.trim()).exists() {
-                match std::env::set_current_dir(path) {
-                    Ok(_) => {},
-                    Err(why) => println!("Error in cd {}", why),
-                }
+            let cur_dir = std::env::current_dir();
+            let mut cur_dir_path : String = "".to_string();
+            match cur_dir {
+                Ok(_) => {
+                    cur_dir_path = cur_dir.unwrap().into_os_string().into_string().unwrap();
+                },
+                Err(why)=> println!("Error : In getting path {}",why),
             }
-            else {
-                println!("Error : No such file or directory")
+
+            let cur_path: Vec<&str> = cur_dir_path.split("Rust-Unix-Shell").collect();
+
+            if cur_path.len() > 1 && path.contains("..") { // Check if cuurent directory is Rust-Unix-Shell prevent back
+                if cur_path[1] != "" {  
+                    if Path::new(path.trim()).exists() {
+                        match std::env::set_current_dir(path) {
+                            Ok(_) => {},
+                            Err(why) => println!("Error in cd {}", why),
+                        }
+                    }
+                    else {
+                        println!("Error : No such directory")
+                    }
+               }
+            }
+            else if cur_path.len() == 2 {
+                if Path::new(path.trim()).exists() {
+                    match std::env::set_current_dir(path) {
+                        Ok(_) => {},
+                        Err(why) => println!("Error in cd {}", why),
+                    }
+                }
+                else {
+                    println!("Error : No such directory")
+                }
             }
         }
      }
