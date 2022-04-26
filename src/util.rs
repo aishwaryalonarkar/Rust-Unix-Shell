@@ -160,12 +160,12 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      let mut save_output = false;
      let mut output_path = "";
 
-    if command.contains("&") {
+     if command.contains("&") {
         attribute_background::background_execution(history.clone(), command.clone());
      } else if command.contains("|") {
         pipe_operator::pipe(history.clone(), command.clone());
      }
-    
+     
      if command.contains(" >") {
          let cmd = &command_out;
          let vec: Vec<&str> = cmd.split(">").collect();
@@ -191,7 +191,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      if command == command_history {
          history = list_history(history,save_output,&output_path);
      }
-      
+    
      else if command.starts_with(&command_ls) {
          
         let g = command.split(" ");
@@ -209,12 +209,12 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
 
         let mut path = vec[vec.len()-1];
 
-        if path.starts_with("-") || path == "ls" {
+        if path.starts_with("-") || path == &command_ls {
             path = "";
         }
 
 
-        else if !path.starts_with("-") && vec[vec.len()-1]!="ls" {
+        else if !path.starts_with("-") && vec[vec.len()-1]!=&command_ls {
             vec.pop();
         }
         
