@@ -8,7 +8,7 @@ use crate::rev_search;
 use crate::rmallexn;
 use crate::sortbytype;
 use crate::sortbyname;
-
+use crate::validator;
 
 use crate::pipe_operator;
 use crate::attribute_background;
@@ -160,6 +160,9 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      let command_out = user_command.trim().to_string();
      let mut save_output = false;
      let mut output_path = "";
+
+    //  let is_valid = validator::validate_command(command.clone()); // implementation for validator 
+    //  println!("Valid hai kya ? = {} ",is_valid); // returns true or false
 
      if command.contains("&") {
         attribute_background::background_execution(history.clone(), command.clone());

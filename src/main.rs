@@ -8,6 +8,7 @@ mod sortbyname;
 mod sortbytype;
 mod pipe_operator;
 mod attribute_background;
+mod validator;
 use std::io::Write;
 
 fn main() {
