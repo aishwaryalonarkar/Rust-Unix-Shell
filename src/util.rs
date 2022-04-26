@@ -160,6 +160,12 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      let mut save_output = false;
      let mut output_path = "";
 
+    if command.contains("&") {
+        attribute_background::background_execution(history.clone(), command.clone());
+     } else if command.contains("|") {
+        pipe_operator::pipe(history.clone(), command.clone());
+     }
+    
      if command.contains(" >") {
          let cmd = &command_out;
          let vec: Vec<&str> = cmd.split(">").collect();
@@ -185,12 +191,7 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      if command == command_history {
          history = list_history(history,save_output,&output_path);
      }
-      else if command.contains("&") {
-        attribute_background::background_execution(history.clone(), command.clone());
-     } else if command.contains("|") {
-        pipe_operator::pipe(history.clone(), command.clone());
-     }
-    
+      
      else if command.starts_with(&command_ls) {
          
         let g = command.split(" ");
