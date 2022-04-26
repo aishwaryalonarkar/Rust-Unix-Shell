@@ -52,7 +52,6 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
             let sym_s_grpup_permission = permission_checker(sym_sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
             let sym_s_other_permission = permission_checker(sym_sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
-            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.clone().into_os_string().into_string().unwrap());
            
             if save_output == true {
                 
@@ -66,6 +65,9 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
                 ) {
                     eprintln!("Couldn't write to file: {}", e);
                 }
+            }
+            else {
+                println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[sym_s_user_permission.clone(), sym_s_grpup_permission.clone(), sym_s_other_permission.clone()].join(""),sym_sample_hard_link,"root","root",sym_sample_size,sym_sample_modified.format("%_d %b %H:%M").to_string(), sym_sample_file_name, sym_sample_path.clone().into_os_string().into_string().unwrap());
             }
             return;
         }
@@ -86,7 +88,6 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
         let s_grpup_permission = permission_checker(sample_file_mode,  S_IRGRP, S_IWGRP, S_IXGRP);
         let s_other_permission = permission_checker(sample_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
-        println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name);
         
         if save_output == true {
                 
@@ -101,6 +102,9 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
                 eprintln!("Couldn't write to file: {}", e);
             }
         }
+        else {
+            println!("-{} \t {} \t {} {} \t {} \t {} \t {}",[s_user_permission.clone(), s_grpup_permission.clone(), s_other_permission.clone()].join(""),sample_hard_link,"root","root",sample_size,sample_modified.format("%_d %b %H:%M").to_string(),sample_file_name);
+        }
         
         return;
     }    
@@ -108,7 +112,6 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
     let paths = fs::read_dir(collected_path).unwrap();
 
     // Printing header for listDir command
-    println!("{} \t {} \t {} {} \t {} \t {} \t {}","Permission", "Links", "User", "Group", "size", "Modified", "Name");
 
     if save_output == true {
                 
@@ -122,6 +125,9 @@ pub fn ls_main(path: String, save_output: bool, output_path : &str) {
         ) {
             eprintln!("Couldn't write to file: {}", e);
         }
+    }
+    else {
+        println!("{} \t {} \t {} {} \t {} \t {} \t {}","Permission", "Links", "User", "Group", "size", "Modified", "Name");
     }
     // Traversing through all files and folders from current path
     paths.for_each(|initial| {
@@ -205,7 +211,6 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf, save_output: bool, o
             let other_permission = permission_checker(sym_file_mode,  S_IROTH, S_IWOTH, S_IXOTH);
 
             // Printing collected data and target path of symbolic link
-            println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name,sym_path.clone().into_os_string().into_string().unwrap());
        
             if save_output == true {          
                 let mut file = OpenOptions::new()
@@ -219,11 +224,13 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf, save_output: bool, o
                     eprintln!("Couldn't write to file: {}", e);
                 }
             }
+            else {
+                println!("l{} \t {} \t {} {} \t {} \t {} \t {} -> {}",[user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root", symbolic_size, modified.format("%_d %b %H:%M").to_string(),file_name,sym_path.clone().into_os_string().into_string().unwrap());
+            }
 
         } else {
 
             // Printing collected data of all files and folders except symbolic link
-            println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name);
             
             if save_output == true {
                 let mut file = OpenOptions::new()
@@ -236,6 +243,9 @@ pub fn metadata_and_print(file_mode: u32, fn_path: PathBuf, save_output: bool, o
                 ) {
                     eprintln!("Couldn't write to file: {}", e);
                 }
+            }
+            else {
+                println!("{} \t {} \t {} {} \t {} \t {} \t {}",[flag.clone(),user_permission.clone(), grpup_permission.clone(), other_permission.clone()].join(""),hard_link,"root","root",size,modified.format("%_d %b %H:%M").to_string(),file_name);
             }
         }
     }

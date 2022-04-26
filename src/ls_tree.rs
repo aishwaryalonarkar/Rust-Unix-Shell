@@ -3,7 +3,6 @@ use std::fs;
 use std::path::Path;
 use std::error::Error;
 use std::fs::metadata;
-// use crate::output;
 use std::fs::File;
 use std::io::Write;
 use std::fs::OpenOptions;
@@ -13,7 +12,9 @@ pub fn tree_display(path : String ,save_output: bool, output_path : &str) {
     if dir_path == "" {
         dir_path = String::from("./");
     }
-    println!("{}",dir_path);
+    if save_output == false  {
+        println!("{}",dir_path);
+    }
 
     if save_output == true {
         let _file = match File::create(output_path) {
@@ -27,14 +28,13 @@ pub fn tree_display(path : String ,save_output: bool, output_path : &str) {
         return;
 	}
     
-    println!("");
-    // println!("=================");
-    // // println!("{}",data);
+    if save_output == false  {
+        println!("");
+    }
 }
 
 fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String, save_output: bool, output_path : &str) -> Result<(), Box<dyn Error>> {
 
-    // let mut data = data1.to_string();
 	if dir.is_dir() {
         level = level + 1;
 
@@ -45,12 +45,6 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String, 
 				if file_name.chars().nth(0).unwrap() != '.' {
 
                     // level = depth from directory
-                    for _i in 1..level {
-                        print!("    ");
-                    }
-                    print!("|");
-                
-                    println!("__{}", file_name);
 
                     if save_output == true {
                         let mut file = OpenOptions::new()
@@ -71,6 +65,16 @@ fn run(dir: &Path, mut level : usize,  mut vec : Vec<String>, dir_path:&String, 
                             eprintln!("Couldn't write to file: {}", e);
                         }
 
+                    }
+
+                    else {
+
+                        for _i in 1..level {
+                            print!("    ");
+                        }
+                        print!("|");
+                    
+                        println!("__{}", file_name);    
                     }
 
                     let s1 = "/".to_string();
@@ -136,24 +140,35 @@ pub fn list_all(path : String ,save_output: bool, output_path : &str) {
         let mut data : String = "".to_owned();
         let mut count = 0;
         for i in disp_vec.iter() {
-            print!("{}",i);
+            if save_output == false  {
+                print!("{}",i);
+            }
             data.push_str(i);
             count+=1;
             if i.len() < max {
                 for _k in i.len()..max {
-                    print!(" ");
+                    if save_output == false  {
+                        print!(" ");
+                    }
                     data.push_str(" ");
                 }
             }
-            print!("\t");
+            if save_output == false  {
+                print!("\t");
+            }
             data.push_str("\t");
 
             if count%screen_max == 0 {
-                println!("");
+                if save_output == false  {
+                    println!("");
+                }
                 data.push_str("\n");
             }
         }
-        println!("");
+
+        if save_output == false  {
+            println!("");
+        }
         
         if save_output == true {
             let mut file = match File::create(output_path) {
@@ -214,20 +229,29 @@ pub fn list_no_param(path : String ,save_output: bool, output_path : &str) {
         let mut data : String = "".to_owned();
 
         for i in disp_vec.iter() {
-            print!("{}",i);
+            if save_output == false  {
+                print!("{}",i);
+            }
+
             data.push_str(i);
 
             count+=1;
             if i.len() < max {
                 for _k in i.len()..max {
-                    print!(" ");
+                    if save_output == false  {
+                        print!(" ");
+                    }
                     data.push_str(" ");
                 }
             }
-            print!("\t");
+            if save_output == false  {
+                print!("\t");
+            }
             data.push_str("\t");
             if count%screen_max == 0 {
-                println!("");
+                if save_output == false  {
+                    println!("");
+                }
                 data.push_str("\n");
             }
         }
@@ -242,7 +266,9 @@ pub fn list_no_param(path : String ,save_output: bool, output_path : &str) {
                 Ok(_) => {},
             }
         }
-        println!("");
+        if save_output == false  {
+            println!("");
+        }
     }
 }
 

@@ -6,6 +6,8 @@ mod rmallexn;
 mod rev_search;
 mod sortbyname;
 mod sortbytype;
+mod pipe_operator;
+mod attribute_background;
 use std::io::Write;
 
 fn main() {

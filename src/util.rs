@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::Path;
-// use std::slice::range;
 use crate::ls;
 use crate::ls_tree;
 use crate::ls_color;
@@ -9,9 +8,9 @@ use crate::rev_search;
 use crate::rmallexn;
 use crate::sortbytype;
 use crate::sortbyname;
-// use crate::output;
-// use crate::output;
 
+use crate::pipe_operator;
+use crate::attribute_background;
 extern crate json;
 
 // Initialize the vector to store the list of commands entered on the shell
@@ -151,8 +150,7 @@ pub fn retrieve_history(mut history:Vec<String>) -> Vec<String> {
 pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) -> Vec<String> {
     let command_history:String = String::from("cmd_history");
     let command_quit: String = String::from("quit");
-    let _command_ls1: String = String::from("listDir"); //listDir
-    let command_ls: String = String::from("ls"); //listDir
+    let command_ls: String = String::from("listDir"); //listDir
     let command_rev_search:String = String::from("rev_search");
     let command_cd:String = String::from("cd");
     let command_sort:String = String::from("sort");
@@ -183,12 +181,16 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
 
         }
      }
-    //  println!("{}",command );
 
      if command == command_history {
          history = list_history(history,save_output,&output_path);
-     } 
-
+     }
+      else if command.contains("&") {
+        attribute_background::background_execution(history.clone(), command.clone());
+     } else if command.contains("|") {
+        pipe_operator::pipe(history.clone(), command.clone());
+     }
+    
      else if command.starts_with(&command_ls) {
          
         let g = command.split(" ");
