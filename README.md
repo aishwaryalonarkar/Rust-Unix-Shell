@@ -11,6 +11,8 @@ d. rev_search(Reverse search and execute): Search in the history to check if the
 
 e. sortbytype (Sort by type): This command is used to combine multiple files of similar pattern or type and it will add those files into a one separate sub directory.
 
+f. pipe operator(|): This command is used to combine multiple command and run them sequentially. 
+
 g. input redirection (<): This command redirects the input from a file and passes it to a command as parameter insted of passing the parameter from standard input.
 
 h. quit: Use quit to get out of rust command line.
@@ -98,7 +100,9 @@ e. sortbytype (Sort by type): This command is used to combine multiple files of 
 
 f. pipe operator(|): This command is used to combine multiple command and run them sequentially. 
 
-g. quit: Use quit to get out of rust command line.
+g. input redirection (<): This command redirects the input from a file and passes it to a command as parameter insted of passing the parameter from standard input.
+
+h. quit: Use quit to get out of rust command line.
 
 # Crates
 1. json = 0.12.4
