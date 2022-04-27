@@ -1,3 +1,4 @@
+
 pub fn validate_command(user_command : String) -> bool {
 
     let command_history:String = String::from("cmd_history");
@@ -11,26 +12,39 @@ pub fn validate_command(user_command : String) -> bool {
      let command_out = user_command.trim().to_string();
 
      if command.contains(" >") {
-         let cmd = &command_out;
-         let vec: Vec<&str> = cmd.split(">").collect();
-         if vec.len() == 2 {
-            let path_to_output = vec[1].clone();
-            let mut cmd1 = command_out.clone();
+        let cmd = &command_out;
+        let vec: Vec<&str> = cmd.split(">").collect();
 
+        if vec.len() == 2 {
+            let path_to_output = vec[1].clone();
+
+            let mut cmd1 = command_out.clone();
             cmd1 = cmd1.clone().replace(">", "");
             cmd1 = cmd1.clone().replace(path_to_output, "");
-            command = cmd1.clone().trim().to_string();
-         }
-         else {
-             return false;
-         }
+            
+            // command = cmd1.clone().trim().to_string();
 
-     }
+            if path_to_output.contains(">") {
+                return false;
+            }
+            else if !path_to_output.contains(">") && path_to_output!="" {
+                command = cmd1.clone().trim().to_string();
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
+    
      if command == command_history {
         return true;
      }
     
+
      else if command.starts_with(&command_ls) {
 
         let g = command.split(" ");
