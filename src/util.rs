@@ -8,7 +8,6 @@ use crate::rev_search;
 use crate::rmallexn;
 use crate::sortbytype;
 use crate::sortbyname;
-use crate::validator;
 
 use crate::pipe_operator;
 use crate::attribute_background;
