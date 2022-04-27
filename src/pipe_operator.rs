@@ -1,4 +1,5 @@
 use crate::util;
+use crate::validator;
 
 pub fn pipe(history:Vec<String>, command: String) {
     
@@ -41,14 +42,38 @@ pub fn pipe(history:Vec<String>, command: String) {
             }
             else{
 
-                for items in chunks.iter(){
+                let mut new_flag = true;
+                //let validate = true;
+                for check_command in chunks.iter(){
 
-                    let cmd = items.trim().to_string();
+                    let check = check_command.trim().to_string();
                     
-                    util::dispatch_function_helper(history.clone(), cmd.clone());
-                    
+                    new_flag = validator::validate_command(check);
+
+                    if new_flag == false{
+
+                        break
+                    }
+
+                } 
+
+                if new_flag == true{
+
+
+                    for items in chunks.iter(){
+
+                        let cmd = items.trim().to_string();
+                        
+                        util::dispatch_function_helper(history.clone(), cmd.clone());
+                        
+                    }
                 }
-            
+                else{
+
+                    println!("Invalid command");
+
+                }
+
             }
         
         }        
