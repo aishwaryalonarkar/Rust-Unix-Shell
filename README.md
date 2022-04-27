@@ -15,7 +15,11 @@ f. pipe operator(|): This command is used to combine multiple command and run th
 
 g. input redirection (<): This command redirects the input from a file and passes it to a command as parameter insted of passing the parameter from standard input.
 
-h. quit: Use quit to get out of rust command line.
+h. output (>) : Saves the output of the command into a file rather than on the console.
+
+i. change directory (cd) : This command is used to change the directory and travel back and forth into the directories.
+
+j. quit: Use quit to get out of rust command line.
 
 # Crates
 1. json = 0.12.4
@@ -97,11 +101,25 @@ listDir -a < input.json
 
 This will take the input for listDir -a from the input.json file and run the listDir command.
 
+3. > (File output)
+
+The above command saves output of any command into a file.
+
+Sample Syntax:
+
+command > \<file_name\> 
+
+Example : 
+
+listDir -l -color > output.txt
+
+The above command will save result of listDir -l -color into the file output.txt
+
 # sortbytype
 
 1. Sort by type:
 
-cmd usage: sortbytype -t extension \<directory_name>
+cmd usage: sortbytype -t extension \<directory_name\>
 
 Above command will move all files with given extension to given sub-directory name. It will add files in sub directory if it already exists otherwise it will creat a new sub directory. 
 
@@ -109,8 +127,26 @@ If there are no matching files with given extension it will return an error and 
 
 2. Sort by name:
 
-cmd usage: sortbytype -n file_sub_string \<directory_name>
+cmd usage: sortbytype -n file_sub_string \<directory_name\>
 
 sortbytype -n will take file sub string and move all files with containing sub string to sub directory. If sub directory does not exist then it will create a new sub directory. 
 
 If there are no matching files with given file sub string then it will return an error and will not create any sub directory.
+
+# Change Directory (cd)
+
+Change directory is used to traverse through the directories.
+
+Sample Syntax:
+
+cd \<directory_name\>
+
+This command will shift forward from current working directory to directory name.
+
+cd ..
+
+This command will shift backward from current working directory.
+
+Example: cd dummy-files
+
+This command will change working directory from current directory to the dummy-files directory. It also checks if the directory name is a valid directory.
