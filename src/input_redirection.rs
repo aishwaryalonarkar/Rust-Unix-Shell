@@ -43,12 +43,30 @@ pub fn redirection(history:Vec<String>, command: String) {
 
                     let json = Json::from_str(&data).unwrap();
                     
-                    let value = json.find_path(&[&input_command]).unwrap();
-                    let space: &str = " ";
-                    input_command.push_str(space);
-                    input_command.push_str(value.as_string().unwrap());
+                    let mut flag = false;
 
-                    util::dispatch_function_helper(history.clone(), input_command.clone());
+                    match json.find_path(&[&input_command]) {
+                        Some(_value) => {
+                            flag = true
+                        },
+                        None =>{}
+                    };
+
+                    if flag == true{
+                        let value = json.find_path(&[&input_command]).unwrap();
+
+                        let space: &str = " ";
+                        input_command.push_str(space);
+                        input_command.push_str(value.as_string().unwrap());
+
+                        util::dispatch_function_helper(history.clone(), input_command.clone());
+                    }
+
+                    else{
+
+                        println!("command input doesn't exist in file");
+
+                    }
 
                 }
                 else{
