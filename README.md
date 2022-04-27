@@ -15,7 +15,7 @@ f. pipe operator(|): This command is used to combine multiple command and run th
 
 g. input redirection (<): This command redirects the input from a file and passes it to a command as parameter insted of passing the parameter from standard input.
 
-h. output (>) : Saves the output of the command into a file rather than on the console.
+h. output (>) : Saves the output of the command into a file rather than displaying it on the console.
 
 i. change directory (cd) : This command is used to change the directory and travel back and forth into the directories.
 
