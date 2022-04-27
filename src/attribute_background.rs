@@ -9,6 +9,11 @@ pub fn background_execution(history:Vec<String>, command: String) {
         return;
     }
 
+    if background_command[0].len() == 0 {
+        println!("command cannot have a length of 0");
+        return;
+    }
+
     if background_command[1].len() != 0 {
         println!("& cannot be followed by a command");
         return;

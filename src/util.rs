@@ -172,7 +172,6 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
      } else if command.contains("<") {
         input_redirection::redirection(history.clone(),command.clone());
      }
-     
      else {
         if command.contains(" >") {
             let cmd = &command_out;

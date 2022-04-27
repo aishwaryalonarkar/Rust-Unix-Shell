@@ -26,12 +26,26 @@ pub fn rev_search(mut history:Vec<String>) -> Vec<String> {
     let stdin = stdin();
     let mut command = String::new();
     let mut index:usize = 0;
+    let current = String::from("rev_search");
+
+    if history.contains(&current) && history.len() == 1 {
+        return history;
+    }
+
     // Bring the console into raw mode where key detection happens
     let mut stdout = stdout().into_raw_mode().unwrap();
     stdout.flush().unwrap();
 
     // Fetch the current cursor position and set the same cursor position into the raw mode
-    let (mut x, y) = stdout.cursor_pos().unwrap();
+    let (mut x, y) = stdout.cursor_pos().unwrap_or_else(|_error| {
+        (0, 0)
+    });
+
+    if x == 0 && y == 0 {
+        println!("Cannot run rev_search in background");
+        return history;
+    }
+
     write!(stdout, "{}{}", termion::cursor::Goto(x,y), 
            termion::clear::CurrentLine).unwrap();
 
@@ -90,6 +104,7 @@ pub fn rev_search(mut history:Vec<String>) -> Vec<String> {
     }
 
     let (new_x, _new_y) = stdout.cursor_pos().unwrap();
+    stdout.suspend_raw_mode().unwrap();
 
     if new_x == 1 {
         // When enter is pressed, we execute the command present in the list at the given index.
