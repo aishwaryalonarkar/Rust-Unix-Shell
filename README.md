@@ -101,7 +101,7 @@ listDir -a < input.json
 
 This will take the input for listDir -a from the input.json file and run the listDir command.
 
-3. > (File output)
+3. /> (File output)
 
 The above command saves output of any command into a file.
 
