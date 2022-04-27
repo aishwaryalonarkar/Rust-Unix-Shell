@@ -182,8 +182,24 @@ Sample Syntax:
 listDir -a < input.json
 
 This will take the input for listDir -a from the input.json file and run the listDir command.
+
 # sortbytype
-Release 3
+
+1. Sort by type:
+
+cmd usage: sortbytype -t extension \<directory_name>
+
+Above command will move all files with given extension to given sub-directory name. It will add files in sub directory if it already exists otherwise it will creat a new sub directory. 
+
+If there are no matching files with given extension it will return an error and it will not create any new sub directory.
+
+2. Sort by name:
+
+cmd usage: sortbytype -n file_sub_string \<directory_name>
+
+sortbytype -n will take file sub string and move all files with containing sub string to sub directory. If sub directory does not exist then it will create a new sub directory. 
+
+If there are no matching files with given file sub string then it will return an error and will not create any sub directory.
 
 # General attributes
 Release 3
