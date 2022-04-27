@@ -1,4 +1,3 @@
-
 pub fn validate_command(user_command : String) -> bool {
 
     let command_history:String = String::from("cmd_history");
@@ -21,8 +20,6 @@ pub fn validate_command(user_command : String) -> bool {
             let mut cmd1 = command_out.clone();
             cmd1 = cmd1.clone().replace(">", "");
             cmd1 = cmd1.clone().replace(path_to_output, "");
-            
-            // command = cmd1.clone().trim().to_string();
 
             if path_to_output.contains(">") {
                 return false;
@@ -39,6 +36,27 @@ pub fn validate_command(user_command : String) -> bool {
         }
     }
 
+    
+    else if command.contains("<"){
+
+        if command.starts_with("<") {
+
+            return false;
+
+        }
+        else if command.ends_with("<"){
+            return false;
+        }
+        else{
+            let chunks: Vec<_> = command.split("<").collect();
+            if chunks.len() != 2{
+                return false;
+            }
+            else{
+                return true;
+            }
+        }        
+    }
     
      if command == command_history {
         return true;
@@ -57,6 +75,12 @@ pub fn validate_command(user_command : String) -> bool {
         }
         for i in vec_indices.iter().rev() {
             vec.remove(*i);
+        }
+        
+        let path = vec[vec.len()-1];
+
+        if !path.starts_with("-") && vec[vec.len()-1]!=&command_ls {
+            vec.pop();
         }
 
         match vec[..] {
