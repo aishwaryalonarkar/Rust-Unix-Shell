@@ -176,22 +176,25 @@ pub fn dispatch_function_helper(mut history:Vec<String>, user_command:String) ->
         if command.contains(" >") {
             let cmd = &command_out;
             let vec: Vec<&str> = cmd.split(">").collect();
-
+            
             if vec.len() == 2 {
                 let path_to_output = vec[1].clone();
 
                 let mut cmd1 = command_out.clone();
                 cmd1 = cmd1.clone().replace(">", "");
                 cmd1 = cmd1.clone().replace(path_to_output, "");
+                
                 command = cmd1.clone().trim().to_string();
 
-                if Path::new(path_to_output.trim()).exists() {
-                    println!("Error : File already exists. Output not saved");
+                if path_to_output.contains(">") {
+                    command = "".to_string();
                 }
-
-                else {    
+                else if !path_to_output.contains(">") && path_to_output!="" {
                     save_output = true;
                     output_path = path_to_output.trim();
+                }
+                else {
+                    command = "".to_string();
                 }
             }
             else {
